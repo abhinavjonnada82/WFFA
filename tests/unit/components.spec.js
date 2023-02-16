@@ -10,6 +10,7 @@ describe("Header component unit test(s): ", () => {
     expect(wrapper.text()).toMatch(title);
   });
 
+  // needs more testing
   // test("Renders the list", () => {
   //   const wrapper = mount(UserList);
   //   const name = "Anna Strong";
