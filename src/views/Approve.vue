@@ -1,48 +1,33 @@
 <template>
      <Menu />
-  <a-button class="editable-add-btn" @click="handleAdd" style="margin-bottom: 8px">Add</a-button>
-  <a-table bordered :data-source="dataSource" :columns="columns">
-    <template #name="{ text, record }">
-      <div class="editable-cell">
-        <div v-if="editableData[record.key]" class="editable-cell-input-wrapper">
-          <a-input v-model:value="editableData[record.key].name" @pressEnter="save(record.key)" />
-          <check-outlined class="editable-cell-icon-check" @click="save(record.key)" />
-        </div>
-        <div v-else class="editable-cell-text-wrapper">
-          {{ text || ' ' }}
-          <edit-outlined class="editable-cell-icon" @click="edit(record.key)" />
-        </div>
-      </div>
-    </template>
-    <template #approve="{ record }">
-
-        <a @click="onApprove(record.key)">Approve</a>
-
-    </template>
-    
-  </a-table>
+   <img alt="logo" src="../assets/logo.png">
+            <h1><b>Admin Dashboard</b></h1>
+            <a-spin v-if="loading" size="large"></a-spin>
+            <a-table bordered :data-source="dataSource" :columns="columns" :key="componentKey">
+              <template #approve="{ record }">
+                  <a @click="onApprove(record.key)">Approve</a>
+              </template>
+            </a-table>
 </template>
 <script>
 
-import { computed, defineComponent, reactive, ref, onMounted } from 'vue';
-import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
-import { cloneDeep } from 'lodash-es';
+import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import Menu from '../components/Menu.vue';
 
 export default defineComponent({
   components: {
-    CheckOutlined,
-    EditOutlined,
     Menu
   },
 
   setup() {
-      // const error = ref(null);
     let data = []
+    const auth = firebase.auth();
     const approveStatus = ref(``);
     const dataSource = ref();
+    const loading = ref(true);
     const columns = [
            {
             title: '',
@@ -78,32 +63,43 @@ export default defineComponent({
     })
 
     const getToken = () => {
-      firebase.auth().onAuthStateChanged(async (user) => {
+      auth.onAuthStateChanged(async (user) => {
       if (user) {
         const token = await user.getIdToken();
         const res = await getAllTeamInfo(token);
         appendDataTable(res.data)
       } else {
-        firebase.auth().signOut().then(() => console.log('Signed out') )
+        auth.signOut().then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
       }
     })  
   }
 
-    const getUserToken = (rosterPayload) => {
+    const onDelete = key => {
+      dataSource.value = dataSource.value.filter(item => item.key !== key);
+    };
+    const onApprove = key => {
+        dataSource.value.filter(async item => {
+            if (item.key === key )
+                setTeamApproval(item)
+                return
+            })
+    };
+
+    const setTeamApproval = async (item) => {
       let token = ``
-      firebase.auth().onAuthStateChanged(async (user) => {
+      let response = ``
+      auth.onAuthStateChanged(async (user) => {
       if (user) {
         token = await user.getIdToken();
-        return getTeamApproval(token, rosterPayload)
-        
+        const rosterPayload = {'userId': item.id}
+        response = await getTeamApproval(token, rosterPayload);
+        if (response.code == 200) onDelete(item.key)
       } else {
-        firebase.auth().signOut().then(() => console.log('Signed out') )
+        auth.signOut().then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
-      }
-      
-    })  
-  }
+      }}) 
+    }
 
     const getAllTeamInfo = async (token) => {
       const response = await fetch(` https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=allTeams`, {
@@ -157,7 +153,7 @@ export default defineComponent({
             id: record.uid
     });
       });
-
+      loading.value = false
       forceRerender()
         
     }
@@ -165,59 +161,16 @@ export default defineComponent({
     dataSource.value = (data);
 
     const componentKey = ref(0);
-    
     const forceRerender = () => {
           componentKey.value += 1;
-    };
-
-    const count = computed(() => dataSource.value.length + 1);
-    const editableData = reactive({});
-
-    const edit = key => {
-      editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
-    };
-
-    const save = key => {
-      Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-      delete editableData[key];
-    };
-
-    const onDelete = key => {
-      dataSource.value = dataSource.value.filter(item => item.key !== key);
-    };
-    const onApprove = key => {
-        dataSource.value.filter(async item => {
-            if (item.key === key )
-                setTeamApproval(item)
-                return
-            })
-        //dataSource.value = dataSource.value.filter(item => item.key !== key);
-    };
-
-    const setTeamApproval = async (item) => {
-      const respone = await getUserToken({'userId': item.id});
-      if (respone.status == 200) onDelete(item.key)
-    }
-
-    const handleAdd = () => {
-      const newData = {
-        key: `${count.value}`,
-        name: `Edward King ${count.value}`,
-        age: 32,
-        address: `London, Park Lane no. ${count.value}`,
-      };
-      dataSource.value.push(newData);
     };
 
     return {
       columns,
       onDelete,
-     handleAdd,
+      componentKey,
       dataSource,
-      editableData,
-      count,
-      edit,
-      save,
+      loading,
       onApprove
     };
   },

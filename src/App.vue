@@ -7,15 +7,17 @@
 <script>
 import { onBeforeMount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 
 export default ({
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const auth = firebase.auth();
 
     onBeforeMount(() => {
-      firebase.auth().onAuthStateChanged((user) => {
+      auth.onAuthStateChanged((user) => {
         if (!user) {
           router.replace('/login');
         } else if (route.path == "/login" || route.path == "/register") {

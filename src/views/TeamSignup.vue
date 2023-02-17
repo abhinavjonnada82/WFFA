@@ -3,6 +3,7 @@
       <Menu />
             <img alt="Vue logo" src="../assets/logo.png">
             <h1><b> Team Signup  </b></h1>
+             <a-spin v-if="loading" size="large"></a-spin>
 <div v-if="status === false">
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
             :wrapper-col="wrapperCol">
@@ -66,7 +67,7 @@
   </a-form>
     <a-modal
       v-model:visible="visible"
-      title="Team Roster"
+      title="Confirm Team Roster?"
       width="100%"
       wrap-class-name="full-modal"
       @ok="handleSubmission"
@@ -83,7 +84,8 @@
 
 <script>
 import { reactive, ref, toRaw, onBeforeMount } from 'vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import { message } from 'ant-design-vue';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import Menu from '../components/Menu.vue';
@@ -97,6 +99,8 @@ export default {
     const status = ref(``);
     const modalText = ref('default');
     const visible = ref(false);
+    const loading = ref(true);
+    const auth = firebase.auth();
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -133,12 +137,12 @@ export default {
     });
 
     const getIdToken = async () => {
-        firebase.auth().onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async (user) => {
           if (user) {
- 
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
             status.value = res.data[0].teamSignup
+            loading.value = false;
             return token
           }
       })
@@ -176,9 +180,9 @@ export default {
 
     const handleSubmission = async () => {
 
-    const user = firebase.auth().currentUser;
+    const user = auth.currentUser;
     const idToken = await user.getIdToken();
-      const rosterPayload = {
+    const rosterPayload = {
         "data": toRaw(formState)
       }
       const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=addData`, {
@@ -188,19 +192,19 @@ export default {
             Authorization:"Bearer "+idToken,
             "Content-Type": "application/json"
             }
-    }))
-     if (response.status === 200) {
-        message.success({
-          content: 'Saved!',
-          duration: 2,
-        }); 
+        }))
+        if (response.status === 200) {
+            message.success({
+              content: 'Saved!',
+              duration: 2,
+            }); 
 
 
-        location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
-       
-      }
-    else { 
-          message.error({
+            location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
+          
+          }
+        else { 
+              message.error({
                         content: `ERROR`,
                         duration: 2,
             }); 
@@ -263,7 +267,8 @@ export default {
       visible,
       handleSubmission,
       modalText,
-      status
+      status,
+      loading
     };
   },
 
@@ -293,13 +298,12 @@ export default {
 }
 
 img {
-    width: 120px;
-    height: 100px;
+    width: 220px;
+    height: 180px;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-
 
 </style>
 

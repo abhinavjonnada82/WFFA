@@ -19,4 +19,11 @@ components: {
 
 <style>
 
+img {
+    width: 220px;
+    height: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 </style>

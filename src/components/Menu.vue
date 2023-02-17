@@ -49,7 +49,8 @@
 
 <script>
 import { onBeforeMount, ref } from 'vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import { message } from 'ant-design-vue';
 import { AppstoreOutlined, EditOutlined, LogoutOutlined, ContainerOutlined, HomeOutlined, CheckOutlined  } from '@ant-design/icons-vue';
 
@@ -60,11 +61,13 @@ export default {
   },
   setup() {
     const admin = ref(``);
+    const auth = firebase.auth();
     const logout = () => {
-      firebase.auth().signOut()
+      auth.signOut()
         .then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
       localStorage.removeItem('admin');
+      localStorage.removeItem('records');
     }
 
     onBeforeMount(async () =>  {
@@ -74,7 +77,7 @@ export default {
     const getToken = () => {
       admin.value = localStorage.getItem('admin') === 'true' ? true : false
       if (localStorage.getItem('admin') !== 'true') {
-        firebase.auth().onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async (user) => {
         if (user) {
           let token = await user.getIdToken();
           const res = await getUserInfo(token);
