@@ -4,6 +4,7 @@
    <Menu />
             <img alt="logo" src="../assets/logo.png">
             <h1><b>Team Roster</b></h1>
+            <a-spin v-if="loading" size="large"></a-spin>
             <a-table :dataSource="dataSource" :columns="columns" :key="componentKey" style="margin: auto; justify-content: center;" >
              
             </a-table>
@@ -20,11 +21,12 @@ import { onMounted, ref } from 'vue';
 export default {
   setup() {
       const error = ref(null);
+      const loading = ref(true);
       const columns = [
            {
             title: '',
-            dataIndex: 'key',
-            key: 'key',
+            dataIndex: '',
+            key: '',
           },
           {
             title: 'Name',
@@ -79,6 +81,7 @@ export default {
             role: `Player`,
           });
       })
+      loading.value = false
       forceRerender()
     }
   const dataSource = ref(data);
@@ -109,6 +112,7 @@ export default {
       dataSource,
       columns,
       error,
+      loading,
       componentKey,
       labelCol: {
         span: 4,
@@ -128,8 +132,8 @@ export default {
 
 <style scoped>
 img {
-    width: 120px;
-    height: 100px;
+    width: 220px;
+    height: 180px;
     display: block;
     margin-left: auto;
     margin-right: auto;

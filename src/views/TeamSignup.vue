@@ -178,7 +178,7 @@ export default {
 
     const user = firebase.auth().currentUser;
     const idToken = await user.getIdToken();
-      const rosterPayload = {
+    const rosterPayload = {
         "data": toRaw(formState)
       }
       const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=addData`, {
@@ -188,19 +188,19 @@ export default {
             Authorization:"Bearer "+idToken,
             "Content-Type": "application/json"
             }
-    }))
-     if (response.status === 200) {
-        message.success({
-          content: 'Saved!',
-          duration: 2,
-        }); 
+        }))
+        if (response.status === 200) {
+            message.success({
+              content: 'Saved!',
+              duration: 2,
+            }); 
 
 
-        location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
-       
-      }
-    else { 
-          message.error({
+            location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
+          
+          }
+        else { 
+              message.error({
                         content: `ERROR`,
                         duration: 2,
             }); 
@@ -293,13 +293,12 @@ export default {
 }
 
 img {
-    width: 120px;
-    height: 100px;
+    width: 220px;
+    height: 180px;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
-
 
 </style>
 
