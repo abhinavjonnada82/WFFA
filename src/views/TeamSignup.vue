@@ -3,6 +3,7 @@
       <Menu />
             <img alt="Vue logo" src="../assets/logo.png">
             <h1><b> Team Signup  </b></h1>
+             <a-spin v-if="loading" size="large"></a-spin>
 <div v-if="status === false">
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
             :wrapper-col="wrapperCol">
@@ -66,7 +67,7 @@
   </a-form>
     <a-modal
       v-model:visible="visible"
-      title="Team Roster"
+      title="Confirm Team Roster?"
       width="100%"
       wrap-class-name="full-modal"
       @ok="handleSubmission"
@@ -83,7 +84,8 @@
 
 <script>
 import { reactive, ref, toRaw, onBeforeMount } from 'vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import { message } from 'ant-design-vue';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import Menu from '../components/Menu.vue';
@@ -97,6 +99,8 @@ export default {
     const status = ref(``);
     const modalText = ref('default');
     const visible = ref(false);
+    const loading = ref(true);
+    const auth = firebase.auth();
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -133,12 +137,12 @@ export default {
     });
 
     const getIdToken = async () => {
-        firebase.auth().onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async (user) => {
           if (user) {
- 
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
             status.value = res.data[0].teamSignup
+            loading.value = false;
             return token
           }
       })
@@ -176,7 +180,7 @@ export default {
 
     const handleSubmission = async () => {
 
-    const user = firebase.auth().currentUser;
+    const user = auth.currentUser;
     const idToken = await user.getIdToken();
     const rosterPayload = {
         "data": toRaw(formState)
@@ -263,7 +267,8 @@ export default {
       visible,
       handleSubmission,
       modalText,
-      status
+      status,
+      loading
     };
   },
 

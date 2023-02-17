@@ -46,12 +46,14 @@ import { message } from 'ant-design-vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { defineComponent, reactive, ref } from 'vue';
 import Header from '../components/Header.vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 
 
 export default defineComponent({
   setup() {
     const formRef = ref();
+    const auth = firebase.auth();
     const formState = reactive({
       email: '',
       pass: '',
@@ -119,8 +121,7 @@ export default defineComponent({
     };
 
     const register = () => {
-      firebase
-          .auth()
+      auth
           .createUserWithEmailAndPassword(formState.email, formState.pass)
           .then(() => {
                         message.success({

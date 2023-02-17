@@ -13,7 +13,8 @@
 
 import { defineComponent, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import Menu from '../components/Menu.vue';
 
 export default defineComponent({
@@ -23,6 +24,7 @@ export default defineComponent({
 
   setup() {
     let data = []
+    const auth = firebase.auth();
     const approveStatus = ref(``);
     const dataSource = ref();
     const loading = ref(true);
@@ -61,13 +63,13 @@ export default defineComponent({
     })
 
     const getToken = () => {
-      firebase.auth().onAuthStateChanged(async (user) => {
+      auth.onAuthStateChanged(async (user) => {
       if (user) {
         const token = await user.getIdToken();
         const res = await getAllTeamInfo(token);
         appendDataTable(res.data)
       } else {
-        firebase.auth().signOut().then(() => console.log('Signed out') )
+        auth.signOut().then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
       }
     })  
@@ -87,14 +89,14 @@ export default defineComponent({
     const setTeamApproval = async (item) => {
       let token = ``
       let response = ``
-      firebase.auth().onAuthStateChanged(async (user) => {
+      auth.onAuthStateChanged(async (user) => {
       if (user) {
         token = await user.getIdToken();
         const rosterPayload = {'userId': item.id}
         response = await getTeamApproval(token, rosterPayload);
         if (response.code == 200) onDelete(item.key)
       } else {
-        firebase.auth().signOut().then(() => console.log('Signed out') )
+        auth.signOut().then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
       }}) 
     }

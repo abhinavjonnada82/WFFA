@@ -47,21 +47,22 @@
 import { message } from 'ant-design-vue';
 import { UserOutlined, LockOutlined, FacebookOutlined, GoogleOutlined } from '@ant-design/icons-vue';
 import { defineComponent, reactive } from 'vue';
-import firebase from 'firebase';
+import firebase from "firebase/app"
+import 'firebase/auth';
 import Header from '../components/Header.vue';
 
 
 
 export default defineComponent({
   setup() {
+    const auth = firebase.auth();
     const formState = reactive({
       email: '',
       password: '',
     });
 
     const login = () => {
-      firebase
-                .auth()
+      auth
                 .signInWithEmailAndPassword(formState.email, formState.password)
                 .then(() => {
                         message.success({
@@ -79,9 +80,8 @@ export default defineComponent({
     };
 
   const fbLogin = () => {
-    let provider = new firebase.auth.FacebookAuthProvider();
-      firebase
-        .auth()
+    let provider = new auth.FacebookAuthProvider();
+    auth
         .signInWithPopup(provider)
         .then(() => {
           /** @type {firebase.auth.OAuthCredential} */
@@ -99,9 +99,8 @@ export default defineComponent({
     }
 
   const gLogin = () => {
-      let provider = new firebase.auth.GoogleAuthProvider();
-      firebase
-        .auth()
+      let provider = new auth.GoogleAuthProvider();
+      auth
         .signInWithPopup(provider)
         .then(() => {
           /** @type {firebase.auth.OAuthCredential} */
