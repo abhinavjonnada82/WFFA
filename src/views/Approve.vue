@@ -5,7 +5,7 @@
             <a-spin v-if="loading" size="large"></a-spin>
             <a-table bordered :data-source="dataSource" :columns="columns" :key="componentKey">
               <template #approve="{ record }">
-                  <a @click="onApprove(record.key)">Approve</a>
+                  <a-button @click="onApprove(record.key)">Approve</a-button>
               </template>
             </a-table>
 </template>
@@ -92,7 +92,7 @@ export default defineComponent({
       auth.onAuthStateChanged(async (user) => {
       if (user) {
         token = await user.getIdToken();
-        const rosterPayload = {'userId': item.id}
+        const rosterPayload = {'userId': item.id, 'phone': item.phone}
         response = await getTeamApproval(token, rosterPayload);
         if (response.code == 200) onDelete(item.key)
       } else {
@@ -133,6 +133,10 @@ export default defineComponent({
     
       if (response.status === 200) {
         approveStatus.value = true
+             message.success({
+              content: 'Approved!',
+              duration: 2,
+            }); 
         return response.json()
         }
       else { 
@@ -150,7 +154,8 @@ export default defineComponent({
             tname: record.data.teamName,
             captainName: record.data.capFullName,
             numPlayers: record.data.players.length,
-            id: record.uid
+            id: record.uid,
+            phone: record.data.phone
     });
       });
       loading.value = false
