@@ -98,19 +98,31 @@ export default {
           }
       }
 
+    const headsUpWarning = () => {
+         message.warning({
+              content: 'Hang tight! Setting up your dashboard',
+              duration: 3,
+            }); 
+    }
+
     const getIdToken = async () => {
         auth.onAuthStateChanged(async (user) => {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            completeRoster.value = res.data[0].teamSignup
-            adminApproval.value = res.data[0].approve
-            paymentSuccess.value = res.data[0].payment
-            if (res.data[0].name === null) {
-              setUsersName()
+            if(res.data.length != 0) {
+              completeRoster.value = res.data[0].teamSignup
+              adminApproval.value = res.data[0].approve
+              paymentSuccess.value = res.data[0].payment
+              if (res.data[0].name === null) {
+                headsUpWarning()
+                setUsersName()
+              } else {
+                nameField.value = res.data[0].name
+                loading.value = false
+              }
             } else {
-              nameField.value = res.data[0].name
-              loading.value = false
+              alert('Please reload the page or log back in')
             }
           }
       })
