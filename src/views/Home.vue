@@ -24,12 +24,20 @@
           <div v-else>
             <a-timeline-item color="red">Payment</a-timeline-item>
           </div>
-          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
+          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
             <a-timeline-item color="#00CCFF">
               <template #dot>
                 <SmileOutlined />
               </template>
               <p>Get Ready to Play!</p>
+            </a-timeline-item>
+          </div>
+          <div v-else-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
+            <a-timeline-item color="#00CCFF">
+              <template #dot>
+                      
+              </template>
+      
             </a-timeline-item>
           </div>
           <div v-else>
@@ -41,6 +49,10 @@
             </a-timeline-item>
           </div>
         </a-timeline>
+        <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+                <CashApp />
+        </div>
+
             <a-modal
                 v-model:visible="visible"
                 title="Name, please?"
@@ -60,6 +72,7 @@ import { ref, onBeforeMount, toRaw } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
+import CashApp from '../components/CashApp.vue';
 import { message } from 'ant-design-vue';
 import { SmileOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
 
@@ -165,6 +178,7 @@ export default {
 
   components: {
    Menu,
+   CashApp,
    SmileOutlined,
    ClockCircleOutlined
   },
