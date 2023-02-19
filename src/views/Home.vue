@@ -76,7 +76,6 @@ export default {
 
     onBeforeMount(() => {
       getIdToken()
-      headsUpWarning()
     })
 
     const getUserInfo = async (token) => {
@@ -102,7 +101,7 @@ export default {
     const headsUpWarning = () => {
          message.warning({
               content: 'Hang tight! Setting up your dashboard',
-              duration: 4,
+              duration: 3,
             }); 
     }
 
@@ -116,6 +115,7 @@ export default {
               adminApproval.value = res.data[0].approve
               paymentSuccess.value = res.data[0].payment
               if (res.data[0].name === null) {
+                headsUpWarning()
                 setUsersName()
               } else {
                 nameField.value = res.data[0].name
