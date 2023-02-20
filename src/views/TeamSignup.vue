@@ -26,7 +26,7 @@
       v-for="(player, index) in formState.players"
       :key="player.key"
       v-bind="index === 0 ? formItemLayout : formItemLayout"
-      :label="index === 0 ? 'Players' : `Player ${index}`"
+      :label="index === 0 ? 'Player 1' : `Player ${index + 1}`"
       :name="['players', index]"
     >
      <a-input

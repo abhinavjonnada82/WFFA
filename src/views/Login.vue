@@ -80,7 +80,7 @@ export default defineComponent({
     };
 
   const fbLogin = () => {
-    let provider = new auth.FacebookAuthProvider();
+    let provider = new firebase.auth.FacebookAuthProvider();
     auth
         .signInWithPopup(provider)
         .then(() => {
@@ -99,7 +99,7 @@ export default defineComponent({
     }
 
   const gLogin = () => {
-      let provider = new auth.GoogleAuthProvider();
+      let provider = new firebase.auth.GoogleAuthProvider();
       auth
         .signInWithPopup(provider)
         .then(() => {
