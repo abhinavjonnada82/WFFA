@@ -18,8 +18,8 @@ export default {
   props: {
   },
   setup() {
-    const appId = 'sandbox-sq0idb-mqU225mXO2Va1qKGI1P1cg';
-    const locationId = 'LR72E4C5EYMQ6';
+    const appId = process.env.APP_ID;
+    const locationId = process.env.LOCATION;
     const auth = firebase.auth();
 
     onBeforeMount(async () => {
@@ -71,7 +71,7 @@ export default {
         });
         return paymentRequest;
     }
-    
+
     const createPayment = async (paymentToken) => {
       const user = auth.currentUser;
       const idToken = await user.getIdToken();
