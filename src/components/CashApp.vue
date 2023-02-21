@@ -1,14 +1,17 @@
 <template>
+  <div id="payment-status-container"></div>
   <div>
     <form id="payment-form">
       <div id="cash-app-pay"></div>
     </form>
-    <div id="payment-status-container"></div>
   </div>
 </template>
 
 <script>
 import { onBeforeMount } from 'vue';
+import firebase from "firebase/app"
+import 'firebase/auth';
+import { message } from 'ant-design-vue';
 
 export default {
   name: 'CashApp',
@@ -17,6 +20,7 @@ export default {
   setup() {
     const appId = 'sandbox-sq0idb-mqU225mXO2Va1qKGI1P1cg';
     const locationId = 'LR72E4C5EYMQ6';
+    const auth = firebase.auth();
 
     onBeforeMount(async () => {
         const response = await loadUpSquare();
@@ -47,7 +51,6 @@ export default {
         const paymentRequest = buildPaymentRequest(payments);
         const cashAppPay = await payments.cashAppPay(paymentRequest, {
           redirectURL: window.location.href,
-          referenceId: 'my-website-00000001',
         });
         const buttonOptions = {
           shape: 'semiround',
@@ -62,25 +65,35 @@ export default {
           countryCode: 'US',
           currencyCode: 'USD',
           total: {
-            amount: '1.00',
+            amount: '10.00',
             label: 'Total',
           },
         });
         return paymentRequest;
     }
-    const createPayment = async (token) => {
-        const body = JSON.stringify({
-          locationId,
-          sourceId: token,
-        });
-        const response =  await fetch('http://localhost:3000/payment', {
+    
+    const createPayment = async (paymentToken) => {
+      const user = auth.currentUser;
+      const idToken = await user.getIdToken();
+      const body = JSON.stringify({
+        locationId,
+        sourceId: paymentToken,
+      });
+        const response =  await fetch('https://us-central1-wffa25444.cloudfunctions.net/paymentPivot/payments', {
             method: 'POST',
             headers: {
+                Authorization:"Bearer "+idToken,
                 'Content-Type': 'application/json',
             },
             body,
             });
-            if (response.ok) return response.json();
+            if (response.ok) {
+              message.success({
+              content: 'Payment Success!',
+              duration: 2,
+            });
+              return response.json();
+            }
             const errorBody = await response.text();
             throw new Error(errorBody);
     }
@@ -103,7 +116,6 @@ export default {
         let payments;
         try {
           payments = window.Square.payments(appId, locationId);
-          console.log('sqqq', payments)
         } 
         catch {
           const statusContainer = document.getElementById('payment-status-container');
@@ -124,12 +136,10 @@ export default {
               const tokenResult = detail.tokenResult;
               if (tokenResult.status === 'OK') {
                     const paymentResults = await createPayment(tokenResult.token);
-                    console.log('paymentResults', paymentResults)
                     displayPaymentResults('SUCCESS');
                     console.debug('Payment Success', paymentResults);
               } else {
                     let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
-
                     if (tokenResult.errors) {
                     errorMessage += ` and errors: ${JSON.stringify(
                         tokenResult.errors
