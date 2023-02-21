@@ -4,7 +4,11 @@
             <img alt="Vue logo" src="../assets/logo.png">
             <h1><b> Team Signup  </b></h1>
              <a-spin v-if="loading" size="large"></a-spin>
-<div v-if="status === false">
+
+<div v-if="status === true">
+  <h1><b>Signup disabled!</b></h1>
+</div>
+<div v-else>
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
             :wrapper-col="wrapperCol">
 
@@ -75,9 +79,7 @@
       <div v-html="modalText"></div>
     </a-modal>
 </div>
-<div v-else>
-  <h1><b>Signup disabled!</b></h1>
-</div>
+
 
 </div>
 </template>

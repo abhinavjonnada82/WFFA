@@ -24,7 +24,16 @@
           <div v-else>
             <a-timeline-item color="red">Payment</a-timeline-item>
           </div>
-          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
+
+          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+            <a-timeline-item color="#00CCFF">
+              <template #dot>
+                <DollarCircleOutlined style="font-size: 16px" />
+              </template>
+              <p>Make a payment $$$</p>
+            </a-timeline-item>
+          </div>
+          <div v-else-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
             <a-timeline-item color="#00CCFF">
               <template #dot>
                 <SmileOutlined />
@@ -32,15 +41,28 @@
               <p>Get Ready to Play!</p>
             </a-timeline-item>
           </div>
+          <div v-else-if="completeRoster === true && adminApproval === false && paymentSuccess === false">
+            <a-timeline-item color="#00CCFF">
+              <template #dot>
+                <ClockCircleOutlined />
+              </template>
+              <p>Waiting for admin approval!</p>
+            </a-timeline-item>
+          </div>
           <div v-else>
             <a-timeline-item color="#00CCFF">
               <template #dot>
-                <ClockCircleOutlined style="font-size: 16px" />
+                <FormOutlined />
               </template>
-              <p>In progress!</p>
+              <p>Signup your team!</p>
             </a-timeline-item>
           </div>
         </a-timeline>
+
+        <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+            <CashApp />
+        </div>
+
             <a-modal
                 v-model:visible="visible"
                 title="Name, please?"
@@ -60,8 +82,9 @@ import { ref, onBeforeMount, toRaw } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
+import CashApp from '../components/CashApp.vue';
 import { message } from 'ant-design-vue';
-import { SmileOutlined, ClockCircleOutlined } from '@ant-design/icons-vue';
+import { SmileOutlined, ClockCircleOutlined, FormOutlined, DollarCircleOutlined } from '@ant-design/icons-vue';
 
 export default {
   setup() {
@@ -98,31 +121,19 @@ export default {
           }
       }
 
-    const headsUpWarning = () => {
-         message.warning({
-              content: 'Hang tight! Setting up your dashboard',
-              duration: 3,
-            }); 
-    }
-
     const getIdToken = async () => {
         auth.onAuthStateChanged(async (user) => {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            if(res.data.length != 0) {
-              completeRoster.value = res.data[0].teamSignup
-              adminApproval.value = res.data[0].approve
-              paymentSuccess.value = res.data[0].payment
-              if (res.data[0].name === null) {
-                headsUpWarning()
-                setUsersName()
-              } else {
-                nameField.value = res.data[0].name
-                loading.value = false
-              }
+            completeRoster.value = res.data[0].teamSignup
+            adminApproval.value = res.data[0].approve
+            paymentSuccess.value = res.data[0].payment
+            if (res.data[0].name === null) {
+              setUsersName()
             } else {
-              alert('Please reload the page or log back in')
+              nameField.value = res.data[0].name
+              loading.value = false
             }
           }
       })
@@ -160,7 +171,7 @@ export default {
     const setUsersName = () => {
       loading.value = false
       visible.value = true;
-      modalText.value = `<div style="align: center"><h3>Enter your name:</h3> <br />`
+      modalText.value = `<div style="align: center"><h3>Enter your first name + last name:</h3> <br />`
     }
 
     return {
@@ -177,8 +188,11 @@ export default {
 
   components: {
    Menu,
+   CashApp,
    SmileOutlined,
-   ClockCircleOutlined
+   ClockCircleOutlined,
+   FormOutlined, 
+   DollarCircleOutlined
   },
 };
 </script>
