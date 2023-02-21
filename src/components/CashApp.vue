@@ -18,8 +18,8 @@ export default {
   props: {
   },
   setup() {
-    const appId = process.env.APP_ID;
-    const locationId = process.env.LOCATION;
+    const appId = 'sandbox-sq0idb-mqU225mXO2Va1qKGI1P1cg';
+    const locationId = 'LR72E4C5EYMQ6';
     const auth = firebase.auth();
 
     onBeforeMount(async () => {
