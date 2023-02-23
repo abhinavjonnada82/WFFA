@@ -181,69 +181,14 @@ body {
   margin: 150px auto;
 }
 
-.buyer-inputs {
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
-#card-container {
-  margin-top: 45px;
-  /* this height depends on the size of the container element */
-  /* We transition from a single row to double row at 485px */
-  /* Settting this min-height minimizes the impact of the card form loading */
-  min-height: 90px;
-}
-
-#gift-card-container {
-  margin-top: 45px;
-  min-height: 90px;
-}
 
 @media screen and (max-width: 500px) {
-  #card-container {
+  /* #card-container {
     min-height: 140px;
-  }
+  } */
 }
-
-#ach-button {
-  margin-top: 20px;
-}
-
-#landing-page-layout {
-  width: 80%;
-  margin: 150px auto;
-  max-width: 1000px;
-}
-
 #its-working {
   color: #737373;
-}
-
-#example-container {
-  width: 100%;
-  border: 1px solid #b3b3b3;
-  padding: 48px;
-  margin: 32px 0;
-  border-radius: 12px;
-}
-
-#example-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-#customer-input {
-  margin-bottom: 40px;
-}
-
-#card-input {
-  margin-top: 0;
-  margin-bottom: 40px;
 }
 
 h3 {
@@ -259,19 +204,6 @@ label {
   width: 100%;
 }
 
-input {
-  padding: 12px;
-  width: 100%;
-  border-radius: 5px;
-  border-width: 1px;
-  margin-top: 20px;
-  font-size: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-input:focus {
-  border: 1px solid #006aff;
-}
 
 button {
   color: #ffffff;
@@ -309,10 +241,6 @@ button:disabled {
   width: 225px;
   height: 48px;
   visibility: hidden;
-}
-
-#payment-status-container.missing-credentials {
-  width: 350px;
 }
 
 #payment-status-container.is-success:before {
@@ -361,14 +289,6 @@ button:disabled {
   content: 'applicationId and/or locationId is incorrect';
   font-size: 14px;
   line-height: 16px;
-}
-
-#payment-status-container.is-success.store-card-message:after {
-  content: 'Store card successful';
-}
-
-#payment-status-container.is-failure.store-card-message:after {
-  content: 'Store card failed';
 }
 
 #afterpay-button {

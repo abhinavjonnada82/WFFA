@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <Header title='Wichita Flag Football Associtaion'/>
+    <Header title='Wichita Flag Football Association'/>
     <h1>Login</h1>
     <a-form
       layout="inline"
