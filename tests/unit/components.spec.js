@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 
 describe("Header component unit test(s): ", () => {
   it("renders props when passed", () => {
-    const title = "Wichita Flag Football Associtaion";
+    const title = "Wichita Flag Football Association";
     const wrapper = mount(Header, {
       props: { title },
     });

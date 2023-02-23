@@ -10,7 +10,7 @@ export default {
   name: 'Header',
   props: {
     title: {
-      default: "Wichita Flag Football Associtaion"
+      default: "Wichita Flag Football Association"
     }
 
   }
