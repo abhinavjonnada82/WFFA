@@ -58,6 +58,8 @@
             </a-timeline-item>
           </div>
         </a-timeline>
+        <br />
+        <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
 
         <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
             <CashApp />
@@ -85,6 +87,7 @@ import Menu from '../components/Menu.vue';
 import CashApp from '../components/CashApp.vue';
 import { message } from 'ant-design-vue';
 import { SmileOutlined, ClockCircleOutlined, FormOutlined, DollarCircleOutlined } from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
@@ -96,6 +99,7 @@ export default {
       const nameField = ref('');
       const loading = ref(true);
       const auth = firebase.auth();
+      const router = useRouter()
 
     onBeforeMount(() => {
       getIdToken()
@@ -174,6 +178,12 @@ export default {
       modalText.value = `<div style="align: center"><h3>Enter your first name + last name:</h3> <br />`
     }
 
+    const redirectToOnboarding = () => {
+            router.push({
+                path: '/onboarding'
+            })
+        }
+
     return {
       completeRoster,
       adminApproval,
@@ -182,7 +192,8 @@ export default {
       handleSubmission,
       modalText,
       nameField,
-      loading
+      loading,
+      redirectToOnboarding
     };
   },
 
