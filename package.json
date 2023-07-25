@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
+    "@vuepic/vue-datepicker": "^5.4.0",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.27.2",
     "core-js": "^3.20.3",
     "firebase": "8.10.0",
     "lodash-es": "latest",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-google-map": "^0.15.0",
+    "vue3-timepicker": "^1.0.0-beta.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

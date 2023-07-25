@@ -22,7 +22,7 @@
         </a-space>
         <br />
       <a-space>
-        <a-button type="primary" @click="submitResponse(keyId, 'saturday')">Confirm</a-button>
+        <a-button type="primary" @click="processDayChecked(keyId, option)">Confirm</a-button>
       </a-space>
       </div>
     </div>
@@ -31,16 +31,26 @@
     <div>
       <h3>{{ question }}</h3>
       <div>
+        <label>Day {{ index + 1 }}: </label>
+        <vue-timepicker v-model="start_time" placeholder="Start Time" @change="logSelectedTimeRange"></vue-timepicker>
+        <span> to </span>
+        <vue-timepicker v-model="end_time" placeholder="End Time"  @change="logSelectedTimeRange"></vue-timepicker>
         <a-space>
-          <a-time-picker show-time placeholder="Select Time" @change="onChange" @ok="onOk" />
-          <a-range-picker
-          :show-time="{ format: 'HH:mm',
-                defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')] }"
-            format="HH:mm"
-            :placeholder="['Start Time', 'End Time']"
-            @change="onChange"
-            @ok="onOk"
-          />
+        
+      </a-space>
+      <br />
+      <a-space>
+        <a-button type="primary" @click="logSelectedTimeRange(keyId)">Confirm</a-button>
+      </a-space>
+      </div>
+    </div>
+  </div>
+  <div v-show="type === 'maps'">
+    <div>
+      <h3>{{ question }}</h3>
+      <div>
+        <a-space>
+          
       </a-space>
       <br />
       <a-space>
@@ -66,38 +76,51 @@
 </template>
 
 <script>
-import moment from 'moment';
 import { computed, ref } from 'vue';
+import VueTimePicker from "vue3-timepicker";
+import "vue3-timepicker/dist/VueTimepicker.css";
 
 export default {
+  components: {
+    "vue-timepicker": VueTimePicker,
+  },
   props: {
     questionSet: Object,
-    currentQuestion: Number,
+    index: Number,
   },
+  emits: ["response-captured"],
   setup(props, { emit }) {
     const question = computed(() => props.questionSet.question);
     const options = computed(() => props.questionSet.options);
     const type = computed(() => props.questionSet.type);
     const keyId = computed(() => props.questionSet.keyId);
-    const count = computed(() => props.currentQuestion);
+    const count = computed(() => props.index);
+    const start_time = ref('')
+    const end_time = ref('')
+    const storeDays = ref([])
 
     const submitResponse = (keyId, optionSelected) => {
       emit('response-captured', keyId, optionSelected);
     };
 
     const getDaysChecked = (optionSelected) => {
+      storeDays.value.push(optionSelected)
       console.log('dd', optionSelected)
     };
 
-    const onChange = (value, dateString) => {
-      console.log('Selected Time: ', value);
-      console.log('Formatted Selected Time: ', dateString);
-    };
-    const onOk = value => {
-      console.log('onOk: ', value);
+    const processDayChecked = (keyId) => {
+      console.log('iffff', storeDays.value)
+      submitResponse(keyId, storeDays.value)
+
+    }
+
+    const logSelectedTimeRange = (keyId) => {
+      console.log('selectedTimeRange', start_time.value)
+      console.log('cccc', end_time.value)
+      const storeTimeOptions = [start_time.value, end_time.value]
+      submitResponse(keyId, storeTimeOptions)
     };
 
-    
     return {
       question,
       options,
@@ -106,10 +129,13 @@ export default {
       count,
       submitResponse,
       getDaysChecked,
+      processDayChecked,
       checked: ref(false),
-      onChange,
-      onOk,
-      moment
+      logSelectedTimeRange,
+      timeFormat: "hh:mm:ss a",
+      start_time,
+      end_time
+
     };
   },
 };

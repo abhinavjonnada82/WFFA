@@ -9,7 +9,7 @@
                 <Question
                   @response-captured="getResponseCaptured"
                   :questionSet="questionSet"
-                  :currentQuestion="currentQuestion"
+                  :index="currentQuestion"
                   />
             </div>
         </transition>
@@ -103,6 +103,39 @@ export default defineComponent({
         questionSet.value.options = [  ],
         questionSet.value.type = 'maps';
         questionSet.value.keyId = 'gameLocation';
+        questionSet.value.response = '';
+      }
+      if (keyId === 'gameLocation') {
+        console.log('gameLocation', keyId)
+        console.log('ggameLocationsFssx', responseCaptured)
+        emittedValue.value = 'tournamentQ6';
+        currentQuestion.value += 1;
+        questionSet.value.question = "Registration start & end dates?"
+        questionSet.value.options = [  ],
+        questionSet.value.type = 'datePicker';
+        questionSet.value.keyId = 'registrationDates';
+        questionSet.value.response = '';
+      }
+      if (keyId === 'registrationDates') {
+        console.log('registrationDates', keyId)
+        console.log('ggregistrationDatesssx', responseCaptured)
+        emittedValue.value = 'tournamentQ7';
+        currentQuestion.value += 1;
+        questionSet.value.question = "Set roster limit?"
+        questionSet.value.options = [  ],
+        questionSet.value.type = 'numberSlider';
+        questionSet.value.keyId = 'rosterLimit';
+        questionSet.value.response = '';
+      }
+      if (keyId === 'rosterLimit') {
+        console.log('rosterLimit', keyId)
+        console.log('ggrrosterLimitnDatesssx', responseCaptured)
+        emittedValue.value = 'tournamentQ8';
+        currentQuestion.value += 1;
+        questionSet.value.question = "Set payment?"
+        questionSet.value.options = [  ],
+        questionSet.value.type = 'inputBox';
+        questionSet.value.keyId = 'payment';
         questionSet.value.response = '';
       }
     };
