@@ -14,9 +14,16 @@
             </div>
         </transition>
 
-    <!-- <div>
-      <p>Emitted Value: {{ emittedValue }}</p>
-    </div>      -->
+        <a-modal
+          v-model:visible="visible"
+          title="Confirm Onboarding?"
+          width="100%"
+          wrap-class-name="full-modal"
+          @ok="handleSubmission"
+        >
+      <div v-html="modalText"></div>
+    </a-modal>
+
 </template>
 
 <script>
@@ -32,7 +39,6 @@ export default defineComponent({
     Question
   },
   data() {
-
     const currentQuestion = ref(0);
     const responses = ref({});
     const emittedValue = ref('');
@@ -43,23 +49,22 @@ export default defineComponent({
       keyId: 'leagueType',
       response: '',
     });
+    const onboardingResponse = ref({});
+    const modalText = ref('default');
+    const visible = ref(false);
 
-    const getResponseCaptured = (keyId, responseCaptured) => {
-     // this.responses[key] = value
+    const getResponseCaptured = (keyId, responseCaptured, index) => {
       if (keyId === 'leagueType' && responseCaptured === 'Tournament') {
-        console.log('vaxx', keyId)
-        console.log('vaxsssssx', responseCaptured)
         emittedValue.value = 'tournamentQ1';
         currentQuestion.value += 1;
         questionSet.value.question = 'Choose format?';
         questionSet.value.options = ['5 Man No Contact', '5 Man Screen', '7 Man No Contact', '7 Man Screen'];
         questionSet.value.type = 'button';
         questionSet.value.keyId = 'tournamentFormat';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'tournamentFormat') {
-        console.log('tournamentQ2', keyId)
-        console.log('vatournamentQ2dxsssssx', responseCaptured)
         emittedValue.value = 'tournamentQ2';
         currentQuestion.value += 1;
         questionSet.value.question = 'Choose elmination format?';
@@ -68,7 +73,8 @@ export default defineComponent({
                     "Double Elmination"];
         questionSet.value.type = 'button';
         questionSet.value.keyId = 'elminationFormat';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'elminationFormat') {
         console.log('elminationFormat', keyId)
@@ -81,62 +87,73 @@ export default defineComponent({
                 ],
         questionSet.value.type = 'checkbox';
         questionSet.value.keyId = 'tournamentDays';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'tournamentDays') {
-        console.log('tournamentDays', keyId)
-        console.log('elmintournamentDaysFssx', responseCaptured)
         emittedValue.value = 'tournamentQ4';
         currentQuestion.value += 1;
         questionSet.value.question =  "Set game start & end time?"
         questionSet.value.options = [  ],
         questionSet.value.type = 'timePicker';
         questionSet.value.keyId = 'gameTime';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'gameTime') {
-        console.log('gameTime', keyId)
-        console.log('gameTimeysFssx', responseCaptured)
         emittedValue.value = 'tournamentQ5';
         currentQuestion.value += 1;
         questionSet.value.question =  "Select game location?"
         questionSet.value.options = [  ],
         questionSet.value.type = 'maps';
         questionSet.value.keyId = 'gameLocation';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'gameLocation') {
-        console.log('gameLocation', keyId)
-        console.log('ggameLocationsFssx', responseCaptured)
         emittedValue.value = 'tournamentQ6';
         currentQuestion.value += 1;
         questionSet.value.question = "Registration start & end dates?"
         questionSet.value.options = [  ],
         questionSet.value.type = 'datePicker';
         questionSet.value.keyId = 'registrationDates';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'registrationDates') {
-        console.log('registrationDates', keyId)
-        console.log('ggregistrationDatesssx', responseCaptured)
         emittedValue.value = 'tournamentQ7';
         currentQuestion.value += 1;
         questionSet.value.question = "Set roster limit?"
         questionSet.value.options = [  ],
         questionSet.value.type = 'numberSlider';
         questionSet.value.keyId = 'rosterLimit';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'rosterLimit') {
-        console.log('rosterLimit', keyId)
-        console.log('ggrrosterLimitnDatesssx', responseCaptured)
         emittedValue.value = 'tournamentQ8';
+        currentQuestion.value = index;
+        questionSet.value.question = "Set payment?"
+        questionSet.value.options = [  ],
+        questionSet.value.type = 'inputBox';
+        questionSet.value.keyId = 'payment';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
+      }
+      if (keyId === 'payment') {
+        emittedValue.value = 'tournamentQ9';
         currentQuestion.value += 1;
         questionSet.value.question = "Set payment?"
         questionSet.value.options = [  ],
         questionSet.value.type = 'inputBox';
         questionSet.value.keyId = 'payment';
-        questionSet.value.response = '';
+        questionSet.value.response = responseCaptured;
+        onboardingResponse.value[keyId] = responseCaptured;
+        visible.value = true;
+        console.log('JSON.stringify(onboardingResponse.value)', JSON.stringify(onboardingResponse.value))
+        modalText.value = `<div style="align: center"><h3>Onboarding Selection </h3> 
+                          <p>${JSON.stringify(onboardingResponse.value)}</p>`
+
       }
     };
 
@@ -145,7 +162,9 @@ export default defineComponent({
         responses,
         emittedValue,
         questionSet,
-        getResponseCaptured
+        getResponseCaptured,
+        visible,
+        modalText,
     }
   }
 });
