@@ -165,12 +165,12 @@ export default {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            completeRoster.value = res.data[0].teamSignup
-            adminApproval.value = res.data[0].approve
-            paymentSuccess.value = res.data[0].payment
-            roleAdmin.value = res.data[0].admin
-            rulesEngineActive.value = res.data[0].rulesEngineActive
-            role.value = res.data[0].role
+            completeRoster.value = res.data[0]?.teamSignup
+            adminApproval.value = res.data[0]?.approve
+            paymentSuccess.value = res.data[0]?.payment
+            roleAdmin.value = res.data[0]?.admin
+            rulesEngineActive.value = res.data[0]?.rulesEngineActive
+            role.value = res.data[0]?.role
             if (res.data[0].name === null) {
               setUserName();
             } else {
