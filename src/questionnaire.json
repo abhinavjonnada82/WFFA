@@ -1,0 +1,104 @@
+
+{
+    "questions": {
+        "starters": {
+            "q1": {
+                "question": "Hosting a Season or Tournament?",
+                "options": [
+                    "Season", "Tournament"
+                ],
+                "type": "button",
+                "keyId": "leagueType",
+                "response": ""
+            }
+        },
+        "tournament": {
+            "q1": {
+                "question": "Choose format?",
+                "options": ["5 Man No Contact", "5 Man Screen", "7 Man No Contact", "7 Man Screen"],
+                "type": "radio",
+                "keyId": "format",
+                "response": ""
+            },
+            "q2": {
+                "question": "Choose elmination format?",
+                "options": [
+                    "Round Robin",
+                    "Single Elmination",
+                    "Double Elmination"
+                ],
+                "type": "radio",
+                "keyId": "elminationFormat",
+                "response": ""
+            },
+            "q3": {
+                "question": "Pick tournament days?",
+                "options": [
+                    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+                ],
+                "type": "dayPicker",
+                "keyId": "tournamentDays",
+                "response": ""
+            },
+            "q4": {
+                "question": "Set game start & end time?",
+                "options": [],
+                "type": "timePicker",
+                "keyId": "gameTime",
+                "response": ""
+            },
+            "q5": {
+                "question": "Select game location?",
+                "options": [],
+                "type": "maps",
+                "keyId": "gameLocation",
+                "response": ""
+            },
+            "q6": {
+                "question": "Registration start & end dates?",
+                "options": [],
+                "type": "datePicker",
+                "keyId": "registrationDates",
+                "response": ""
+            },
+            "q7": {
+                "question": "Set roster limit?",
+                "options": [],
+                "type": "numberSlider",
+                "keyId": "rosterLimit",
+                "response": ""
+            },
+            "q8": {
+                "question": "Set payment?",
+                "options": [],
+                "type": "inputBox",
+                "keyId": "payment",
+                "response": ""
+            }
+        },
+        "season": {
+            "q1": {
+                "question": "5 + 7 = ?",
+                "options": [
+                    "10",
+                    "11",
+                    "12",
+                    "13"
+                ],
+                "type": "radio",
+                "response": ""
+            },
+            "q2": {
+                "question": "12 - 8 = ?",
+                "options": [
+                    "1",
+                    "2",
+                    "3",
+                    "4"
+                ],
+                "type": "radio",
+                "response": ""
+            }
+        }
+    }
+}
