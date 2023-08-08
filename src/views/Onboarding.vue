@@ -32,7 +32,7 @@ import { defineComponent, onBeforeMount } from 'vue';
 import Menu from '../components/Menu.vue';
 import Question from '../components/Question.vue';
 import { ref } from 'vue';
-import { getUserInfo } from '../utils.js';
+import { getUserInfo, humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays } from '../utils.js';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
@@ -160,17 +160,32 @@ export default defineComponent({
         onboardingResponse.value[keyId] = responseCaptured;
         visible.value = true;
         rulesResponse.value = onboardingResponse.value
+        console.log('onboardingResponse.value', JSON.stringify(onboardingResponse.value))
         modalText.value = `<div style="align: center"><h3>Onboarding Selection </h3> 
-                          <p>${JSON.stringify(onboardingResponse.value)}</p>`
+                          <p>
+                            <ul>
+                              <li> League Type: ${onboardingResponse.value.leagueType} </li>
+                              <li> Tournament Format: ${onboardingResponse.value.tournamentFormat} </li>
+                              <li> Elmination Format: ${onboardingResponse.value.elminationFormat} </li>
+                              <li> Tournament Days: ${formatTournamentDays(onboardingResponse.value.tournamentDays)} </li>
+                              <li> Game Time: ${formatGameTime(onboardingResponse.value.gameTime)} </li>
+                              <li> Registration Dates: ${humanReadableFromISO(onboardingResponse.value.registrationDates)} </li>
+                              <li> Roster Limit: ${onboardingResponse.value.rosterLimit} </li>
+                              <li> Payment: ${formatPayment(onboardingResponse.value.payment)} </li>
+                            </ul>
+                          </p>`
 
       }
     };
 
     const getUserProfileInfo = async () => {
-      const user = auth.currentUser;
-      const token = await user.getIdToken();
-      const userInfo = await getUserInfo(token);
-      userId.value = userInfo.data[0].uid
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          let token = await user.getIdToken();
+          const userInfo = await getUserInfo(token);
+          userId.value = userInfo.data[0].uid
+        }
+      }) 
     }
 
     const handleSubmission = async () => {
@@ -178,11 +193,8 @@ export default defineComponent({
       const token = await user.getIdToken();
       rulesResponse.value['userId'] = userId.value;
       rulesResponse.value['PIN'] = Math.floor(10000 + Math.random() * 90000);
-      console.log('rulesResponse.value', rulesResponse.value)
       const rosterPayload = { "rules": rulesResponse.value}
       rosterPayload["userId"] = userId.value
-      console.log('token', token)
-      console.log('rosterPayload', JSON.stringify(rosterPayload))
       const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=rulesEngine`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),

@@ -21,6 +21,7 @@
   import { message } from 'ant-design-vue';
   import firebase from "firebase/app"
   import 'firebase/auth';
+  import { humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays } from '../utils.js';
 
   export default {
     name: 'Admin Summary',
@@ -84,7 +85,7 @@
 
             for (let i=0; i<10; i++) {
                 if (rulesFields[i] === 'gameTime') {
-                    data.value[i].description = formatTime(rules.value[rulesFields[i]]);
+                    data.value[i].description = formatGameTime(rules.value[rulesFields[i]]);
                 }
                 else if (rulesFields[i] === 'payment') {
                     data.value[i].description = formatPayment(rules.value[rulesFields[i]]);
@@ -101,27 +102,6 @@
             }
         }
 
-        const formatTime = (time) => { return `${time[0]} - ${time[1]}`}
-
-        const formatPayment = (payment) => { return `$${payment}`}
-
-        const formatTournamentDays = (days) => { 
-            let listOfDays = ``
-            for(let day of days) {  listOfDays += `${day}, ` }
-            return listOfDays.slice(0, -2);
-        }
-
-        const humanReadableFromISO = (registrationDates) => {
-            let timeStamp = ``
-            for (const registrationDate of registrationDates ) {
-                const submittedDate = new Date(String(registrationDate));
-                timeStamp += `${submittedDate.toLocaleString('en-US', { month: 'long' }) + ' ' 
-                                + submittedDate.getDate() + ',' + submittedDate.getFullYear() + ' '} - `
-            }
-            return timeStamp.slice(0, -2); // January 28, 2021 16:11:54
-        }
-
-
         const getAdminRules = async (token) => {
             const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getRules&type=admin`, {
                 method:'GET',
@@ -131,7 +111,6 @@
                     }
                 }))
                 if (response.status === 200) {
-                    console.log('123')
                     return response.json()
                 }
                 else { 

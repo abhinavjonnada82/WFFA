@@ -76,7 +76,6 @@
             const res = await getUserInfo(token);
             
             rules.value = res.data[0].rules;
-            console.log('res', res.data[0].rules)
             const rulesFields = ['elminationFormat', 'gameLocation', 'gameTime',
                                   'leagueType', 'payment', 'registrationDates', 'rosterLimit',
                                   'tournamentDays', 'tournamentFormat']
