@@ -70,7 +70,7 @@
         <div v-else-if="roleAdmin === true">
           <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
         </div>
-        <div v-else-if="role === 'user' && rulesEngineActive === false">
+        <div v-else-if="role === 'user' && rulesEngineActive === false && nameField != ''">
           <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
         </div>
         <div v-else-if="role === 'user' && rulesEngineActive === true">
@@ -93,7 +93,7 @@
         </a-modal>
 
         <a-modal
-            v-model:visible="visible"
+            v-model:visible="visiblePin"
             title="Enter a season/tournment"
             width="75%"
             wrap-class-name="full-modal"
@@ -125,6 +125,7 @@ export default {
       const paymentSuccess = ref(``);
       const modalText = ref('default');
       const visible = ref(false);
+      const visiblePin = ref(false);
       const nameField = ref('');
       const loading = ref(true);
       const auth = firebase.auth();
@@ -213,7 +214,7 @@ export default {
                 duration: 2,
             }); 
          }
-        visible.value = false;
+        visiblePin.value = false;
     }
 
     const handleSubmission = async () => {
@@ -260,7 +261,7 @@ export default {
 
     const integrateRulesEngine = () => {
       loading.value = false
-      visible.value = true;
+      visiblePin.value = true;
       modalPINText.value = `<div style="align: center"><h3>Enter your unique 5-digit PIN:</h3> <br />`
     }
 
@@ -280,7 +281,8 @@ export default {
       uniquePIN,
       handlePINSubmission,
       integrateRulesEngine,
-      modalPINText
+      modalPINText,
+      visiblePin
     };
   },
 

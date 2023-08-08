@@ -21,7 +21,7 @@
  // import { message } from 'ant-design-vue';
   import firebase from "firebase/app"
   import 'firebase/auth';
-  import { getUserInfo } from '../utils.js';
+  import { getUserInfo, formatTournamentDays, formatGameTime, formatPayment } from '../utils.js';
 
   export default {
     name: 'User Headlines',
@@ -82,7 +82,7 @@
 
             for (let i=0; i<9; i++) {
                 if (rulesFields[i] === 'gameTime') {
-                    data.value[i].description = formatTime(rules.value[rulesFields[i]]);
+                    data.value[i].description = formatGameTime(rules.value[rulesFields[i]]);
                 }
                 else if (rulesFields[i] === 'payment') {
                     data.value[i].description = formatPayment(rules.value[rulesFields[i]]);
@@ -97,16 +97,6 @@
                     data.value[i].description = rules.value[rulesFields[i]];
                 }
             }
-        }
-
-        const formatTime = (time) => { return `${time[0]} - ${time[1]} (24hr format)`}
-
-        const formatPayment = (payment) => { return `$${payment}`}
-
-        const formatTournamentDays = (days) => { 
-            let listOfDays = ``
-            for(let day of days) {  listOfDays += `${day}, ` }
-            return listOfDays.slice(0, -2);
         }
 
         const humanReadableDays = (registrationDates) => {
