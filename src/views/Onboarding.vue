@@ -28,10 +28,16 @@
 
 <script>
 
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeMount } from 'vue';
 import Menu from '../components/Menu.vue';
 import Question from '../components/Question.vue';
 import { ref } from 'vue';
+import { getUserInfo } from '../utils.js';
+import firebase from "firebase/app"
+import 'firebase/auth';
+import { message } from 'ant-design-vue';
+
+const auth = firebase.auth();
 
 export default defineComponent({
   components: {
@@ -40,7 +46,6 @@ export default defineComponent({
   },
   data() {
     const currentQuestion = ref(0);
-    const responses = ref({});
     const emittedValue = ref('');
     const questionSet = ref({
       question: 'Hosting a Season or Tournament?',
@@ -52,6 +57,12 @@ export default defineComponent({
     const onboardingResponse = ref({});
     const modalText = ref('default');
     const visible = ref(false);
+    const rulesResponse = ref({});
+    const userId = ref('');
+
+    onBeforeMount(() => {
+      getUserProfileInfo();
+    })
 
     const getResponseCaptured = (keyId, responseCaptured, index) => {
       if (keyId === 'leagueType' && responseCaptured === 'Tournament') {
@@ -77,8 +88,6 @@ export default defineComponent({
         onboardingResponse.value[keyId] = responseCaptured;
       }
       if (keyId === 'elminationFormat') {
-        console.log('elminationFormat', keyId)
-        console.log('elminationFormatdxsssssx', responseCaptured)
         emittedValue.value = 'tournamentQ3';
         currentQuestion.value += 1;
         questionSet.value.question = "Pick tournament days?",
@@ -150,21 +159,66 @@ export default defineComponent({
         questionSet.value.response = responseCaptured;
         onboardingResponse.value[keyId] = responseCaptured;
         visible.value = true;
-        console.log('JSON.stringify(onboardingResponse.value)', JSON.stringify(onboardingResponse.value))
+        rulesResponse.value = onboardingResponse.value
         modalText.value = `<div style="align: center"><h3>Onboarding Selection </h3> 
                           <p>${JSON.stringify(onboardingResponse.value)}</p>`
 
       }
     };
 
+    const getUserProfileInfo = async () => {
+      const user = auth.currentUser;
+      const token = await user.getIdToken();
+      const userInfo = await getUserInfo(token);
+      userId.value = userInfo.data[0].uid
+    }
+
+    const handleSubmission = async () => {
+      const user = auth.currentUser;
+      const token = await user.getIdToken();
+      rulesResponse.value['userId'] = userId.value;
+      rulesResponse.value['PIN'] = Math.floor(10000 + Math.random() * 90000);
+      console.log('rulesResponse.value', rulesResponse.value)
+      const rosterPayload = { "rules": rulesResponse.value}
+      rosterPayload["userId"] = userId.value
+      console.log('token', token)
+      console.log('rosterPayload', JSON.stringify(rosterPayload))
+      const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=rulesEngine`, {
+        method:'POST',
+        body: JSON.stringify(rosterPayload),
+        headers:{
+
+            Authorization:"Bearer "+token,
+            "Content-Type": "application/json"
+            }
+        }))
+        if (response.status === 200) {
+            message.success({
+              content: 'Saved!',
+              duration: 2,
+            });
+            location.replace(window.location.origin + `/`); //  direct user to team roster & disable signup
+          
+          }
+        else { 
+              message.error({
+                        content: `ERROR`,
+                        duration: 2,
+            }); 
+        }
+      visible.value = false;
+    }
+
+
+
     return {
         currentQuestion,
-        responses,
         emittedValue,
         questionSet,
         getResponseCaptured,
         visible,
         modalText,
+        handleSubmission
     }
   }
 });

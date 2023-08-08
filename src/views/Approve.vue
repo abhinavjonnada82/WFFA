@@ -62,8 +62,8 @@ export default defineComponent({
         getToken()
     })
 
-    const getToken = () => {
-      auth.onAuthStateChanged(async (user) => {
+    const getToken = async () => {
+      const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
         const res = await getAllTeamInfo(token);
@@ -72,12 +72,12 @@ export default defineComponent({
         auth.signOut().then(() => console.log('Signed out') )
         .catch(err => alert(err.message))
       }
-    })  
   }
 
     const onDelete = key => {
       dataSource.value = dataSource.value.filter(item => item.key !== key);
     };
+    
     const onApprove = key => {
         dataSource.value.filter(async item => {
             if (item.key === key )
@@ -102,7 +102,7 @@ export default defineComponent({
     }
 
     const getAllTeamInfo = async (token) => {
-      const response = await fetch(` https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=allTeams`, {
+      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=allTeams`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
