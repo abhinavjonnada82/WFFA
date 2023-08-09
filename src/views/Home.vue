@@ -59,8 +59,10 @@
               </a-timeline-item>
             </div>
           </a-timeline>
+          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+            <CashApp />
         </div>
-
+        </div>
         <br />
         <div v-if="roleAdmin === true && rulesEngineActive === true">
           <AdminSummary/>
@@ -77,9 +79,6 @@
           <UserHeadlines />
         </div>
 
-        <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-            <CashApp />
-        </div>
 
         <a-modal
             v-model:visible="visible"
@@ -165,16 +164,16 @@ export default {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            completeRoster.value = res.data[0].teamSignup
-            adminApproval.value = res.data[0].approve
-            paymentSuccess.value = res.data[0].payment
-            roleAdmin.value = res.data[0].admin
-            rulesEngineActive.value = res.data[0].rulesEngineActive
-            role.value = res.data[0].role
-            if (res.data[0].name === null) {
+            completeRoster.value = res.data[0]?.teamSignup
+            adminApproval.value = res.data[0]?.approve
+            paymentSuccess.value = res.data[0]?.payment
+            roleAdmin.value = res.data[0]?.admin
+            rulesEngineActive.value = res.data[0]?.rulesEngineActive
+            role.value = res.data[0]?.role
+            if (res.data[0]?.name === null) {
               setUserName();
             } else {
-              nameField.value = res.data[0].name
+              nameField.value = res.data[0]?.name
               loading.value = false
             }
           }

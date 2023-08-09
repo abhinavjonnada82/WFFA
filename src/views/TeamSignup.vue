@@ -5,7 +5,7 @@
             <h1><b> Team Signup  </b></h1>
              <a-spin v-if="loading" size="large"></a-spin>
 
-<div v-if="teamSignup === true">
+<div v-if="teamSignup === true || role === 'admin'">
   <h1><b>Signup disabled!</b></h1>
 </div>
 <div v-else-if="new Date(String(registrationDates)) > new Date()">
@@ -108,6 +108,7 @@ export default {
     const auth = firebase.auth();
     const rosterLimit = ref('');
     const registrationDates = ref('');
+    const role = ref('');
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -148,9 +149,10 @@ export default {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            teamSignup.value = res.data[0].teamSignup
-            rosterLimit.value = res.data[0].rules.rosterLimit
-            registrationDates.value = res.data[0].rules.registrationDates[0]
+            teamSignup.value = res.data[0]?.teamSignup
+            role.value = res.data[0]?.role
+            rosterLimit.value = res.data[0].rules && res.data[0].rules.rosterLimit
+            registrationDates.value = res.data[0].rules && res.data[0].rules.registrationDates[0]
             loading.value = false;
             return token
           }
@@ -282,7 +284,8 @@ export default {
       teamSignup,
       loading,
       rosterLimit,
-      registrationDates
+      registrationDates,
+      role
     };
   },
 

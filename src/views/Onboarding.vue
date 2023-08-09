@@ -160,7 +160,6 @@ export default defineComponent({
         onboardingResponse.value[keyId] = responseCaptured;
         visible.value = true;
         rulesResponse.value = onboardingResponse.value
-        console.log('onboardingResponse.value', JSON.stringify(onboardingResponse.value))
         modalText.value = `<div style="align: center"><h3>Onboarding Selection </h3> 
                           <p>
                             <ul>
