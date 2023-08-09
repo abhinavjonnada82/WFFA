@@ -171,7 +171,6 @@ export default {
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
             if (res.data[0]?.name === null) {
-              console.log('res.data[0]?.name', res.data[0]?.name)
               setUserName();
             } else {
               nameField.value = res.data[0]?.name
