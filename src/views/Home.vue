@@ -59,8 +59,10 @@
               </a-timeline-item>
             </div>
           </a-timeline>
+          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+            <CashApp />
         </div>
-
+        </div>
         <br />
         <div v-if="roleAdmin === true && rulesEngineActive === true">
           <AdminSummary/>
@@ -77,9 +79,6 @@
           <UserHeadlines />
         </div>
 
-        <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-            <CashApp />
-        </div>
 
         <a-modal
             v-model:visible="visible"
@@ -171,10 +170,11 @@ export default {
             roleAdmin.value = res.data[0]?.admin
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
-            if (res.data[0].name === null) {
+            if (res.data[0]?.name === null) {
+              console.log('res.data[0]?.name', res.data[0]?.name)
               setUserName();
             } else {
-              nameField.value = res.data[0].name
+              nameField.value = res.data[0]?.name
               loading.value = false
             }
           }

@@ -81,9 +81,9 @@ export default {
         if (user) {
           let token = await user.getIdToken();
           const res = await getUserInfo(token);
-          if(res.data.length != 0 && res.data[0].admin) { 
-            admin.value = res.data[0].admin
-            localStorage.setItem('admin', res.data[0].admin)
+          if(res.data.length != 0 && res.data[0]?.admin) { 
+            admin.value = res.data[0]?.admin
+            localStorage.setItem('admin', res.data[0]?.admin)
           }
         }
       })  
