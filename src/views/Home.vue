@@ -5,7 +5,7 @@
         <img alt="Vue logo" src="../assets/logo.png">
         <h1><b>Welcome, {{nameField}}</b></h1>
         <a-spin v-if="loading" size="large"></a-spin>
-        <div v-if="role === 'user'">
+        <div >
           <a-timeline mode="alternate">
             <div v-if="completeRoster === true">
               <a-timeline-item color="green">Complete Roster</a-timeline-item>
@@ -61,6 +61,7 @@
           </a-timeline>
           <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
             <CashApp />
+            <Venmo />
         </div>
         </div>
         <br />
@@ -111,6 +112,7 @@ import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
 import CashApp from '../components/CashApp.vue';
+import Venmo from '../components/Venmo.vue';
 import AdminSummary from '../components/AdminSummary.vue';
 import { message } from 'ant-design-vue';
 import { SmileOutlined, ClockCircleOutlined, FormOutlined, DollarCircleOutlined } from '@ant-design/icons-vue';
@@ -134,6 +136,7 @@ export default {
       const role = ref('');
       const uniquePIN = ref('');
       const modalPINText = ref('default');
+      const paymentValue = ref('');
 
     onBeforeMount(() => {
       getIdToken()
@@ -149,7 +152,7 @@ export default {
       })
     
       if (response.status === 200) {
-        return response.json()
+        return response.json();
         }
       else { 
             message.error({
@@ -170,6 +173,7 @@ export default {
             roleAdmin.value = res.data[0]?.admin
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
+            localStorage.setItem('payment', res.data[0]?.rules?.payment)
             if (res.data[0]?.name === null) {
               setUserName();
             } else {
@@ -281,13 +285,15 @@ export default {
       handlePINSubmission,
       integrateRulesEngine,
       modalPINText,
-      visiblePin
+      visiblePin,
+      paymentValue
     };
   },
 
   components: {
     Menu,
     CashApp,
+    Venmo,
     SmileOutlined,
     ClockCircleOutlined,
     FormOutlined,

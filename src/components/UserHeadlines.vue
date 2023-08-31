@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-card title="Tournment" :style="{ textAlign: 'center' }">
+        <a-card title="Tournment Summary" :style="{ textAlign: 'center' }">
             <a-list :grid="{ gutter: 16, column: 4 }" :data-source="data">
                 <template #renderItem="{ item }">
                 <a-list-item>
@@ -75,7 +75,7 @@
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
             
-            rules.value = res.data[0].rules;
+            rules.value = res.data[0]?.rules;
             const rulesFields = ['elminationFormat', 'gameLocation', 'gameTime',
                                   'leagueType', 'payment', 'registrationDates', 'rosterLimit',
                                   'tournamentDays', 'tournamentFormat']
@@ -104,7 +104,8 @@
                 return `Registration begins in ${daysConversion(registrationDates[0], new Date())} day(s)`
             }
             else {
-                return `Registration Ends in ${daysConversion(registrationDates[1], new Date())} day(s)`
+                if (daysConversion(registrationDates[1], new Date()) >= 0) return `Registration Ends in ${daysConversion(registrationDates[1], new Date())} day(s)`
+                else return `Registration closed`
             }
         }
 

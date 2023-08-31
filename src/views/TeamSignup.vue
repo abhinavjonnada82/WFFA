@@ -11,6 +11,9 @@
 <div v-else-if="new Date(String(registrationDates)) > new Date()">
   <h1><b>Registration opens on {{ new Date(String(registrationDates)).toLocaleDateString() }}</b></h1>
 </div>
+<div v-else-if="new Date(String(registrationLastDates)) < new Date()">
+  <h1><b>Registration closed</b></h1>
+</div>
 <div v-else>
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
             :wrapper-col="wrapperCol">
@@ -108,6 +111,7 @@ export default {
     const auth = firebase.auth();
     const rosterLimit = ref('');
     const registrationDates = ref('');
+    const registrationLastDates = ref('');
     const role = ref('');
     const formItemLayout = {
       labelCol: {
@@ -153,6 +157,7 @@ export default {
             role.value = res.data[0]?.role
             rosterLimit.value = res.data[0].rules && res.data[0].rules.rosterLimit
             registrationDates.value = res.data[0].rules && res.data[0].rules.registrationDates[0]
+            registrationLastDates.value = res.data[0].rules && res.data[0].rules.registrationDates[1]
             loading.value = false;
             return token
           }
@@ -285,6 +290,7 @@ export default {
       loading,
       rosterLimit,
       registrationDates,
+      registrationLastDates,
       role
     };
   },
