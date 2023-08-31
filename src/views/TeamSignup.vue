@@ -8,6 +8,9 @@
 <div v-if="teamSignup === true || role === 'admin'">
   <h1><b>Signup disabled!</b></h1>
 </div>
+<div v-if="rules === false">
+  <h1><b>Enter a Season/Tournament to signup your team!</b></h1>
+</div>
 <div v-else-if="new Date(String(registrationDates)) > new Date()">
   <h1><b>Registration opens on {{ new Date(String(registrationDates)).toLocaleDateString() }}</b></h1>
 </div>
@@ -113,6 +116,7 @@ export default {
     const registrationDates = ref('');
     const registrationLastDates = ref('');
     const role = ref('');
+    const rules = ref('');
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -155,6 +159,7 @@ export default {
             const res = await getUserInfo(token);
             teamSignup.value = res.data[0]?.teamSignup
             role.value = res.data[0]?.role
+            rules.value = res.data[0].rules ? true : false
             rosterLimit.value = res.data[0].rules && res.data[0].rules.rosterLimit
             registrationDates.value = res.data[0].rules && res.data[0].rules.registrationDates[0]
             registrationLastDates.value = res.data[0].rules && res.data[0].rules.registrationDates[1]
@@ -291,7 +296,8 @@ export default {
       rosterLimit,
       registrationDates,
       registrationLastDates,
-      role
+      role,
+      rules
     };
   },
 

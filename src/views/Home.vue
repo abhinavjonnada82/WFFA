@@ -73,7 +73,7 @@
         <div v-else-if="roleAdmin === true">
           <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
         </div>
-        <div v-else-if="role === 'user' && rulesEngineActive === false && nameField != ''">
+        <div v-else-if="role === 'user' && rulesEngineActive === false && nameField !== ''">
           <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
         </div>
         <div v-else-if="role === 'user' && rulesEngineActive === true">
