@@ -65,7 +65,7 @@ export default {
           countryCode: 'US',
           currencyCode: 'USD',
           total: {
-            amount: '10.00',
+            amount: localStorage.getItem('payment'),
             label: 'Total',
           },
         });
@@ -78,8 +78,9 @@ export default {
       const body = JSON.stringify({
         locationId,
         sourceId: paymentToken,
+        payment: localStorage.getItem('payment')
       });
-        const response =  await fetch('https://us-central1-wffa25444.cloudfunctions.net/paymentPivot/payments', {
+        const response =  await fetch('https://us-central1-wffa25444.cloudfunctions.net/paymentPivot/cashapp-payment', {
             method: 'POST',
             headers: {
                 Authorization:"Bearer "+idToken,
@@ -179,6 +180,7 @@ body {
   max-width: 550px;
   min-width: 300px;
   margin: 150px auto;
+  margin-top: -10px;
 }
 
 

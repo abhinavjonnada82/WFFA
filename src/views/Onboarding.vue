@@ -168,6 +168,7 @@ export default defineComponent({
                               <li> Elmination Format: ${onboardingResponse.value.elminationFormat} </li>
                               <li> Tournament Days: ${formatTournamentDays(onboardingResponse.value.tournamentDays)} </li>
                               <li> Game Time: ${formatGameTime(onboardingResponse.value.gameTime)} </li>
+                              <li> Location: ${onboardingResponse.value.gameLocation} </li>
                               <li> Registration Dates: ${humanReadableFromISO(onboardingResponse.value.registrationDates)} </li>
                               <li> Roster Limit: ${onboardingResponse.value.rosterLimit} </li>
                               <li> Payment: ${formatPayment(onboardingResponse.value.payment)} </li>

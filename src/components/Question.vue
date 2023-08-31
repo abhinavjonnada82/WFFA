@@ -62,13 +62,13 @@
       <h3>{{ question }}</h3>
       <div>
         <a-space>
-          
-      </a-space>
+          <AddressField @address="handleAddressResponse"/>
+        </a-space>
       <br />
       <a-space>
         <div id="space-above">
           <a-button danger @click="goBack('tournamentDays', '')">Back</a-button>
-          <a-button type="primary" @click="submitResponse(keyId, '4:00p')" style="margin-left: 10px">Confirm</a-button>
+          <a-button type="primary" @click="submitResponse(keyId, addressResponse)" style="margin-left: 10px">Confirm</a-button>
         </div>
       </a-space>
       </div>
@@ -143,11 +143,13 @@ import "vue3-timepicker/dist/VueTimepicker.css";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { message } from 'ant-design-vue';
+import AddressField from './AddressField.vue';
 
 export default {
   components: {
     "vue-timepicker": VueTimePicker,
-    VueDatePicker
+    VueDatePicker,
+    AddressField
   },
   props: {
     questionSet: Object,
@@ -166,6 +168,7 @@ export default {
     const storeDays = ref([])
     const rosterValue = ref(1);
     const paymentLimit = ref('');
+    const addressResponse = ref('');
 
     const submitResponse = (keyId, optionSelected) => {
       emit('response-captured', keyId, optionSelected);
@@ -228,6 +231,11 @@ export default {
       emit('response-captured', keyId)
     }
 
+    const handleAddressResponse = (response) => {
+      addressResponse.value = response;
+    };
+
+
     return {
       question,
       options,
@@ -249,7 +257,8 @@ export default {
       getPayment,
       paymentLimit,
       goBack,
-     // countRef: computed(() => countRef.value),
+      handleAddressResponse,
+      addressResponse,
 
     };
   },

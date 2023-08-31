@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
+    "@fawmi/vue-google-maps": "^0.9.79",
+    "@paypal/paypal-js": "^7.0.2",
     "@vuepic/vue-datepicker": "^5.4.0",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.27.2",
