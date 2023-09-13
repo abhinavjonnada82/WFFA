@@ -1,107 +1,121 @@
 <template>
   <div id="app">
-      <Menu />
+    <Menu />
 
-        <img alt="Vue logo" src="../assets/logo.png">
-        <h1><b>Welcome, {{nameField}}</b></h1>
-        <a-spin v-if="loading" size="large"></a-spin>
-        <div >
-          <a-timeline mode="alternate">
-            <div v-if="completeRoster === true">
-              <a-timeline-item color="green">Complete Roster</a-timeline-item>
-            </div>
-            <div v-else>
-              <a-timeline-item color="red">Complete Roster</a-timeline-item>
-            </div>
-            <div v-if="adminApproval === true">
-              <a-timeline-item color="green">Admin Approval</a-timeline-item>
-            </div>
-            <div v-else>
-              <a-timeline-item color="red">Admin Approval</a-timeline-item>
-            </div>
-              <div v-if="paymentSuccess === true">
-              <a-timeline-item color="green">Payment</a-timeline-item>
-            </div>
-            <div v-else>
-              <a-timeline-item color="red">Payment</a-timeline-item>
-            </div>
+    <div class="container">
+      <div class="logo-container">
+        <img alt="Vue logo" src="../assets/logo.png" />
+      </div>
+      <h1><b>Welcome, {{ nameField || `guest` }}!</b></h1>
+      <a-spin v-if="loading" size="large"></a-spin>
 
-            <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-              <a-timeline-item color="#00CCFF">
-                <template #dot>
-                  <DollarCircleOutlined style="font-size: 16px" />
-                </template>
-                <p>Make a payment $$$</p>
-              </a-timeline-item>
-            </div>
-            <div v-else-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
-              <a-timeline-item color="#00CCFF">
-                <template #dot>
-                  <SmileOutlined />
-                </template>
-                <p>Get Ready to Play!</p>
-              </a-timeline-item>
-            </div>
-            <div v-else-if="completeRoster === true && adminApproval === false && paymentSuccess === false">
-              <a-timeline-item color="#00CCFF">
-                <template #dot>
-                  <ClockCircleOutlined />
-                </template>
-                <p>Waiting for admin approval!</p>
-              </a-timeline-item>
-            </div>
-            <div v-else>
-              <a-timeline-item color="#00CCFF">
-                <template #dot>
-                  <FormOutlined />
-                </template>
-                <p>Signup your team!</p>
-              </a-timeline-item>
-            </div>
-          </a-timeline>
-          <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-            <CashApp />
-            <Venmo />
-        </div>
-        </div>
-        <br />
+      <!-- Timeline Div -->
+      <div v-if="userType === `user`">
+        <a-timeline mode="alternate">
+          <!-- ... Timeline Items ... -->
+                        <div v-if="completeRoster === true">
+                          <a-timeline-item color="green">Complete Roster</a-timeline-item>
+                        </div>
+                        <div v-else>
+                          <a-timeline-item color="red"><router-link to="/teamsignup">Complete Roster</router-link></a-timeline-item>
+                        </div>
+                        <div v-if="adminApproval === true">
+                          <a-timeline-item color="green">Admin Approval</a-timeline-item>
+                        </div>
+                        <div v-else>
+                          <a-timeline-item color="red">Admin Approval</a-timeline-item>
+                        </div>
+                          <div v-if="paymentSuccess === true">
+                          <a-timeline-item color="green">Payment</a-timeline-item>
+                        </div>
+                        <div v-else>
+                          <a-timeline-item color="red">Payment</a-timeline-item>
+                        </div>
+
+                        <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+                          <a-timeline-item color="#00CCFF">
+                            <template #dot>
+                              <DollarCircleOutlined style="font-size: 16px" />
+                            </template>
+                            <p>Make a payment $$$</p>
+                          </a-timeline-item>
+                        </div>
+                        <div v-else-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
+                          <a-timeline-item color="#00CCFF">
+                            <template #dot>
+                              <SmileOutlined />
+                            </template>
+                            <p>Get Ready to Play!</p>
+                          </a-timeline-item>
+                        </div>
+                        <div v-else-if="completeRoster === true && adminApproval === false && paymentSuccess === false">
+                          <a-timeline-item color="#00CCFF">
+                            <template #dot>
+                              <ClockCircleOutlined />
+                            </template>
+                            <p>Waiting for admin approval!</p>
+                          </a-timeline-item>
+                        </div>
+                        <div v-else>
+                          <a-timeline-item color="#00CCFF">
+                            <template #dot>
+                              <FormOutlined />
+                            </template>
+                            <p>Signup your team!</p>
+                          </a-timeline-item>
+                        </div>
+        </a-timeline>
+      </div>
+
+      <br />
+
+      <div class="button-container">
+        <!-- ... Button Divs ... -->
         <div v-if="roleAdmin === true && rulesEngineActive === true">
-          <AdminSummary/>
-          <br />
-          <a-button type="primary" size="large" disabled>Host a season/tournment</a-button>
-        </div>
-        <div v-else-if="roleAdmin === true">
-          <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
-        </div>
-        <div v-else-if="role === 'user' && rulesEngineActive === false && nameField !== ''">
-          <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
-        </div>
-        <div v-else-if="role === 'user' && rulesEngineActive === true">
-          <UserHeadlines />
-        </div>
+                <AdminSummary/>
+                <br />
+                <a-button type="primary" size="large" disabled>Host a season/tournment</a-button>
+              </div>
+              <div v-else-if="roleAdmin === true">
+                <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
+              </div>
+              <div v-else-if="role === 'user' && rulesEngineActive === false && nameField !== ''">
+                <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
+              </div>
+              <div v-else-if="role === 'user' && rulesEngineActive === true">
+                <UserHeadlines />
+              </div>
+      </div>
 
+      <!-- Payment Div -->
+      <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+        <CashApp />
+        <Venmo />
+      </div>
+    </div>
 
-        <a-modal
-            v-model:visible="visible"
-            title="Name, please?"
-            width="75%"
-            wrap-class-name="full-modal"
-            @ok="handleSubmission"
-          >
-            <div v-html="modalText"></div>
-                  <a-input v-model:value="nameField" />
-        </a-modal>
+    <!-- Modals -->
+    <a-modal
+      v-model:visible="visible"
+      title="Name, please?"
+      width="75%"
+      wrap-class-name="full-modal"
+      @ok="handleSubmission"
+    >
+      <div v-html="modalText"></div>
+      <a-input v-model:value="nameField" />
+    </a-modal>
 
-        <a-modal
-            v-model:visible="visiblePin"
-            title="Enter a season/tournment"
-            width="75%"
-            wrap-class-name="full-modal"
-            @ok="handlePINSubmission"
-          >
-            <div v-html="modalPINText"></div>
-                  <a-input type="number" v-model:value="uniquePIN"/>
-        </a-modal>
+    <a-modal
+      v-model:visible="visiblePin"
+      title="Enter a season/tournment"
+      width="75%"
+      wrap-class-name="full-modal"
+      @ok="handlePINSubmission"
+    >
+      <div v-html="modalPINText"></div>
+      <a-input type="number" v-model:value="uniquePIN" />
+    </a-modal>
   </div>
 </template>
 
@@ -132,6 +146,7 @@ export default {
       const auth = firebase.auth();
       const router = useRouter();
       const roleAdmin = ref('');
+      const userType = ref('');
       const rulesEngineActive = ref('');
       const role = ref('');
       const uniquePIN = ref('');
@@ -167,10 +182,12 @@ export default {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
+            if(res.data === false) window.location.reload();
             completeRoster.value = res.data[0]?.teamSignup
             adminApproval.value = res.data[0]?.approve
             paymentSuccess.value = res.data[0]?.payment
             roleAdmin.value = res.data[0]?.admin
+            userType.value = res.data[0]?.role
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
             localStorage.setItem('payment', res.data[0]?.rules?.payment)
@@ -286,7 +303,8 @@ export default {
       integrateRulesEngine,
       modalPINText,
       visiblePin,
-      paymentValue
+      paymentValue,
+      userType
     };
   },
 
@@ -303,8 +321,8 @@ export default {
 },
 };
 </script>
-<style>
 
+<style scoped>
 
 img {
     width: 250px;
@@ -314,6 +332,22 @@ img {
     margin-right: auto;
 }
 
+.container {
+  text-align: center;
+  padding: 20px;
+}
 
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Add more styles as needed */
 </style>
+
 
