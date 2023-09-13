@@ -29,7 +29,7 @@
         <br />
       <a-space>
         <div id="space-above">
-          <a-button danger @click="goBack('tournamentFormat', '')">Back</a-button>
+          <a-button danger @click="goBack('leagueType', '')">Back</a-button>
           <a-button type="primary" @click="processDayChecked(keyId, option)" style="margin-left: 10px">Confirm</a-button>
         </div>
       </a-space>
@@ -41,16 +41,16 @@
       <h3>{{ question }}</h3>
       <div>
         <label>From: </label>
-        <vue-timepicker v-model="start_time" placeholder="Start Time" @change="logSelectedTimeRange" required></vue-timepicker>
+        <vue-timepicker format="hh:mm A" v-model="start_time" placeholder="Start Time" @change="logSelectedTimeRange" required></vue-timepicker>
         <span> To: </span>
-        <vue-timepicker v-model="end_time" placeholder="End Time"  @change="logSelectedTimeRange" required></vue-timepicker>
+        <vue-timepicker format="hh:mm A" v-model="end_time" placeholder="End Time"  @change="logSelectedTimeRange" required></vue-timepicker>
         <a-space>
         
       </a-space>
       <br />
       <a-space>
         <div id="space-above">
-          <a-button danger @click="goBack('elminationFormat', '')">Back</a-button>
+          <a-button danger @click="goBack('leagueType', '')">Back</a-button>
           <a-button type="primary" @click="logSelectedTimeRange(keyId)" style="margin-left: 10px">Confirm</a-button>
         </div>
       </a-space>
@@ -79,8 +79,10 @@
       <h3>{{ question }}</h3>
       <div>
         <a-space>
-          <VueDatePicker v-model="registrationDates" range multi-calendars @change="logSelectedDateRange"/>
+          <VueDatePicker v-model="registrationDates" range multi-calendars @change="logSelectedDateRange" :alt-position="customPosition"/>
       </a-space>
+      <br />
+            <h3><b>Registration Dates:</b> {{ registrationDates[0] }} - {{ registrationDates[1] }}</h3>
       <br />
       <a-space>
         <div id="space-above">
@@ -169,6 +171,7 @@ export default {
     const rosterValue = ref(1);
     const paymentLimit = ref('');
     const addressResponse = ref('');
+    const customPosition = () => ({ top: 0, left: 0 });
 
     const submitResponse = (keyId, optionSelected) => {
       emit('response-captured', keyId, optionSelected);
@@ -176,6 +179,9 @@ export default {
 
     const getDaysChecked = (optionSelected) => {
       storeDays.value.push(optionSelected);
+      if (storeDays.value.length === 0) {
+        warningMessage();
+      }
     };
 
     const processDayChecked = (keyId) => {
@@ -194,7 +200,7 @@ export default {
 
     const logSelectedDateRange = (keyId) => {
       if (registrationDates.value[0] || registrationDates.value[1]) {
-        const storeDateOptions = [registrationDates.value[0], registrationDates.value[1]]
+        const storeDateOptions = [registrationDates.value[0], registrationDates.value[1]];
         submitResponse(keyId, storeDateOptions)
       }
       else {
@@ -259,6 +265,7 @@ export default {
       goBack,
       handleAddressResponse,
       addressResponse,
+      customPosition
 
     };
   },

@@ -65,29 +65,29 @@ export default defineComponent({
     })
 
     const getResponseCaptured = (keyId, responseCaptured, index) => {
-      if (keyId === 'leagueType' && responseCaptured === 'Tournament') {
-        emittedValue.value = 'tournamentQ1';
-        currentQuestion.value += 1;
-        questionSet.value.question = 'Choose format?';
-        questionSet.value.options = ['5 Man No Contact', '5 Man Screen', '7 Man No Contact', '7 Man Screen'];
-        questionSet.value.type = 'button';
-        questionSet.value.keyId = 'tournamentFormat';
-        questionSet.value.response = responseCaptured;
-        onboardingResponse.value[keyId] = responseCaptured;
-      }
-      if (keyId === 'tournamentFormat') {
-        emittedValue.value = 'tournamentQ2';
-        currentQuestion.value += 1;
-        questionSet.value.question = 'Choose elmination format?';
-        questionSet.value.options = [ "Round Robin",
-                    "Single Elmination",
-                    "Double Elmination"];
-        questionSet.value.type = 'button';
-        questionSet.value.keyId = 'elminationFormat';
-        questionSet.value.response = responseCaptured;
-        onboardingResponse.value[keyId] = responseCaptured;
-      }
-      if (keyId === 'elminationFormat') {
+      // if (keyId === 'leagueType' && responseCaptured === 'Tournament') {
+      //   emittedValue.value = 'tournamentQ1';
+      //   currentQuestion.value += 1;
+      //   questionSet.value.question = 'Choose format?';
+      //   questionSet.value.options = ['5 Man No Contact', '5 Man Screen', '7 Man No Contact', '7 Man Screen'];
+      //   questionSet.value.type = 'button';
+      //   questionSet.value.keyId = 'tournamentFormat';
+      //   questionSet.value.response = responseCaptured;
+      //   onboardingResponse.value[keyId] = responseCaptured;
+      // }
+      // if (keyId === 'tournamentFormat') {
+      //   emittedValue.value = 'tournamentQ2';
+      //   currentQuestion.value += 1;
+      //   questionSet.value.question = 'Choose elmination format?';
+      //   questionSet.value.options = [ "Round Robin",
+      //               "Single Elmination",
+      //               "Double Elmination"];
+      //   questionSet.value.type = 'button';
+      //   questionSet.value.keyId = 'elminationFormat';
+      //   questionSet.value.response = responseCaptured;
+      //   onboardingResponse.value[keyId] = responseCaptured;
+      // }
+      if (keyId === 'leagueType') {
         emittedValue.value = 'tournamentQ3';
         currentQuestion.value += 1;
         questionSet.value.question = "Pick tournament days?",
@@ -164,8 +164,6 @@ export default defineComponent({
                           <p>
                             <ul>
                               <li> League Type: ${onboardingResponse.value.leagueType} </li>
-                              <li> Tournament Format: ${onboardingResponse.value.tournamentFormat} </li>
-                              <li> Elmination Format: ${onboardingResponse.value.elminationFormat} </li>
                               <li> Tournament Days: ${formatTournamentDays(onboardingResponse.value.tournamentDays)} </li>
                               <li> Game Time: ${formatGameTime(onboardingResponse.value.gameTime)} </li>
                               <li> Location: ${onboardingResponse.value.gameLocation} </li>
@@ -245,4 +243,12 @@ export default defineComponent({
     .fade-leave-to {
         opacity: 0;
     }
+
+    img {
+    width: 250px;
+    height: 200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 </style>
