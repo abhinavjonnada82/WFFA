@@ -69,6 +69,12 @@
 
       <br />
 
+            <!-- Payment Div -->
+      <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
+        <CashApp />
+        <Venmo />
+      </div>
+
       <div class="button-container">
         <!-- ... Button Divs ... -->
         <div v-if="roleAdmin === true && rulesEngineActive === true">
@@ -87,11 +93,6 @@
               </div>
       </div>
 
-      <!-- Payment Div -->
-      <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-        <CashApp />
-        <Venmo />
-      </div>
     </div>
 
     <!-- Modals -->
