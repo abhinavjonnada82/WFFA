@@ -10,7 +10,9 @@ import { urls } from './utils.js'
 
 
 let firebaseConfig = ``
-
+console.log('location.host', location.host)
+console.log('ursl', urls)
+console.log('urs', urls.prod)
 if (location.host === urls.prod) {
   firebaseConfig = {
     apiKey: process.env.PROD_VUE_APP_API_KEY,
