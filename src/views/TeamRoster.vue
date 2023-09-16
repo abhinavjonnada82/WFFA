@@ -39,6 +39,7 @@ import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
 import { onMounted, ref } from 'vue';
+import { baseAPI } from '../utils';
 
 export default {
   setup() {
@@ -141,7 +142,7 @@ export default {
   };
   const dataSource = ref(data);
   const getTeamInfo = async (token) => {
-      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=team`, {
+      const response = await fetch(`${baseAPI}teamData?api=getData&type=team`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
@@ -177,7 +178,7 @@ export default {
     const getUsersList = async () => {
       const user = auth.currentUser;
       const token = await user.getIdToken();
-      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=allUsers`, {
+      const response = await fetch(`${baseAPI}teamData?api=getData&type=allUsers`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
@@ -224,7 +225,7 @@ export default {
   const getSelectedTeam = async (team) => {
      const user = auth.currentUser;
      const token = await user.getIdToken();
-     const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=adminVerifyTeam&param=${team.id}`, {
+     const response = await fetch(`${baseAPI}teamData?api=getData&type=adminVerifyTeam&param=${team.id}`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,

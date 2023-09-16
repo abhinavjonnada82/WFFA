@@ -13,6 +13,7 @@ import { loadScript } from '@paypal/paypal-js';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
+import { baseAPI } from '../utils';
 
 export default {
     name: 'Venmo',
@@ -46,7 +47,7 @@ export default {
                 try {
                     await paypal.Buttons({
                         createOrder: () => {
-                            return fetch("https://us-central1-wffa25444.cloudfunctions.net/paymentPivot/create-paypal-order", {
+                            return fetch(`${baseAPI}paymentPivot/create-paypal-order`, {
                                 method: "POST",
                                 headers: {
                                     Authorization:"Bearer "+idToken,
@@ -60,7 +61,7 @@ export default {
                                 .then((order) => order.id);
                         },
                         onApprove: (data) => {
-                            return fetch("https://us-central1-wffa25444.cloudfunctions.net/paymentPivot/capture-paypal-order", {
+                            return fetch(`${baseAPI}paymentPivot/capture-paypal-order`, {
                                 method: "POST",
                                 headers: {
                                     Authorization:"Bearer "+idToken,
