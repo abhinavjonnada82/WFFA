@@ -6,6 +6,7 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import "firebase/firestore";
 import VueGoogleMaps from '@fawmi/vue-google-maps';
+import { urls } from './utils.js'
 
 
 let firebaseConfig = ``
