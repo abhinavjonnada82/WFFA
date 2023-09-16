@@ -42,7 +42,7 @@ export const formatGameTime = (time) => { return `${time[0]} - ${time[1]}`}
 export const formatPayment = (payment) => { return `$${payment}`}
 
 export const urls = {
-  'dev': 'wffa-live.web.app',
+  'dev': 'wffa25444.web.app',
   'prod': 'wffa-live.web.app'
 }
 
