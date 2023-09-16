@@ -2,6 +2,7 @@
   "name": "wffawebapp",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,13 +11,19 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",
+    "@fawmi/vue-google-maps": "^0.9.79",
+    "@paypal/paypal-js": "^7.0.2",
+    "@vuepic/vue-datepicker": "^5.4.0",
     "ant-design-vue": "^2.2.8",
     "axios": "^0.27.2",
     "core-js": "^3.20.3",
     "firebase": "8.10.0",
+    "firebase-tools": "^11.23.1",
     "lodash-es": "latest",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-google-map": "^0.15.0",
+    "vue3-timepicker": "^1.0.0-beta.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -32,7 +39,6 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
-    "firebase-tools": "^11.23.1",
     "vue-jest": "^5.0.0-0"
   },
   "eslintConfig": {

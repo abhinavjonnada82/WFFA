@@ -10,7 +10,7 @@
     >
     <div style="margin-left: auto; margin-right: auto;">
       <a-form-item style="width: 500px;">
-        <a-input  v-model:value="formState.email" placeholder="Username">
+        <a-input  v-model:value="formState.email" placeholder="Input Email Address">
           <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
         </a-input>
       </a-form-item>
@@ -32,12 +32,15 @@
       </a-form-item>
     </div>
     </a-form>
-     <br />
+    <br />
+    <p>Forgot Password? <router-link to="/forgot">Click Here</router-link></p>
+
      <div id="socialButton">
-      <a-button :style="{fontSize: '20px'}" @click="fbLogin"> <FacebookOutlined /> </a-button>
+        <a-button :style="{fontSize: '20px'}" @click="fbLogin"> <FacebookOutlined /> </a-button>
       <div class="divider"/>
-      <a-button  :style="{fontSize: '20px'}" @click="gLogin"> <GoogleOutlined /> </a-button>
+        <a-button  :style="{fontSize: '20px'}" @click="gLogin"> <GoogleOutlined /> </a-button>
      </div>
+     <br />
      <br />
       <p>Have an email account? <router-link to="/register">Register Here</router-link></p>
     </div>
@@ -115,7 +118,7 @@ export default defineComponent({
                               duration: 2,
             });
         });
-      }
+  }
 
     const handleFinishFailed = errors => {
       console.log(errors);
@@ -126,7 +129,7 @@ export default defineComponent({
       login,
       fbLogin,
       gLogin,
-      handleFinishFailed,
+      handleFinishFailed
     };
   },
 

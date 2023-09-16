@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import "firebase/firestore";
+import VueGoogleMaps from '@fawmi/vue-google-maps';
 
 
 const firebaseConfig = {
@@ -24,4 +25,11 @@ const app = createApp(App)
 
 export const db = firebase.firestore();
 app.use(Antd)
-app.use(router).mount('#app')
+app.use(router)
+app.use(VueGoogleMaps, {
+  load: {
+      v: 3.53,
+      key: 'AIzaSyA_lSDE1PTzh4hMnTpyiOuDXASGQHdsR6U',
+      libraries: "places"
+  },
+}).mount('#app')

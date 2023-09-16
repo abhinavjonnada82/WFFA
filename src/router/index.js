@@ -43,6 +43,16 @@ const routes = [
     component: () => import('../views/Register.vue')
   },
   {
+    path: '/forgot',
+    name: 'Forgot Password',
+    component: () => import('../views/ForgotPassword.vue')
+  },
+  {
+    path: '/onboarding',
+    name: 'Onboarding',
+    component: () => import('../views/Onboarding.vue')
+  },
+  {
     path: '/:catchAll(.*)*',
     name: "PageNotFound",
     component: PageNotFound,

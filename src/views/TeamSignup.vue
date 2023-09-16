@@ -5,8 +5,17 @@
             <h1><b> Team Signup  </b></h1>
              <a-spin v-if="loading" size="large"></a-spin>
 
-<div v-if="status === true">
+<div v-if="teamSignup === true || role === 'admin'">
   <h1><b>Signup disabled!</b></h1>
+</div>
+<div v-if="rules === false">
+  <h1><b>Enter a Season/Tournament to signup your team!</b></h1>
+</div>
+<div v-else-if="new Date(String(registrationDates)) > new Date()">
+  <h1><b>Registration opens on {{ new Date(String(registrationDates)).toLocaleDateString() }}</b></h1>
+</div>
+<div v-else-if="new Date(String(registrationLastDates)) < new Date()">
+  <h1><b>Registration closed</b></h1>
 </div>
 <div v-else>
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
@@ -98,11 +107,16 @@ export default {
   },
   setup() {
     const formRef = ref();
-    const status = ref(``);
+    const teamSignup = ref(``);
     const modalText = ref('default');
     const visible = ref(false);
     const loading = ref(true);
     const auth = firebase.auth();
+    const rosterLimit = ref('');
+    const registrationDates = ref('');
+    const registrationLastDates = ref('');
+    const role = ref('');
+    const rules = ref('');
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -143,7 +157,12 @@ export default {
           if (user) {
             const token = await user.getIdToken();
             const res = await getUserInfo(token);
-            status.value = res.data[0].teamSignup
+            teamSignup.value = res.data[0]?.teamSignup
+            role.value = res.data[0]?.role
+            rules.value = res.data[0].rules ? true : false
+            rosterLimit.value = res.data[0].rules && res.data[0].rules.rosterLimit
+            registrationDates.value = res.data[0].rules && res.data[0].rules.registrationDates[0]
+            registrationLastDates.value = res.data[0].rules && res.data[0].rules.registrationDates[1]
             loading.value = false;
             return token
           }
@@ -151,7 +170,7 @@ export default {
     }
     
     onBeforeMount(() => {
-      getIdToken()
+      getIdToken();
     })
 
     const submitForm = () => {
@@ -181,37 +200,33 @@ export default {
     };
 
     const handleSubmission = async () => {
-
-    const user = auth.currentUser;
-    const idToken = await user.getIdToken();
-    const rosterPayload = {
-        "data": toRaw(formState)
-      }
-      const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=addData`, {
-        method:'POST',
-        body: JSON.stringify(rosterPayload),
-        headers:{
-            Authorization:"Bearer "+idToken,
-            "Content-Type": "application/json"
+      const user = auth.currentUser;
+      const idToken = await user.getIdToken();
+      const rosterPayload = {
+          "data": toRaw(formState)
+        }
+        const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=addData`, {
+          method:'POST',
+          body: JSON.stringify(rosterPayload),
+          headers:{
+              Authorization:"Bearer "+idToken,
+              "Content-Type": "application/json"
+              }
+          }))
+          if (response.status === 200) {
+              message.success({
+                content: 'Saved!',
+                duration: 2,
+              }); 
+              location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
             }
-        }))
-        if (response.status === 200) {
-            message.success({
-              content: 'Saved!',
-              duration: 2,
-            }); 
-
-
-            location.replace(window.location.origin + `/teamroster`); //  direct user to team roster & disable signup
-          
+          else { 
+                message.error({
+                          content: `ERROR`,
+                          duration: 2,
+              }); 
           }
-        else { 
-              message.error({
-                        content: `ERROR`,
-                        duration: 2,
-            }); 
-         }
-      visible.value = false;
+        visible.value = false;
     }
 
     const removeDomain = item => {
@@ -223,10 +238,17 @@ export default {
     };
 
     const addDomain = () => {
-      formState.players.push({
-        value: '',
-        key: Date.now(),
-      });
+      if (formState.players.length+1 <= rosterLimit.value) {
+        formState.players.push({
+          value: '',
+          key: Date.now(),
+        });
+      } else {
+        message.warning({
+                          content: `Exceeding the set roster limit`,
+                          duration: 2,
+              }); 
+      }
     };
 
     const getUserInfo = async (token) => {
@@ -269,8 +291,13 @@ export default {
       visible,
       handleSubmission,
       modalText,
-      status,
-      loading
+      teamSignup,
+      loading,
+      rosterLimit,
+      registrationDates,
+      registrationLastDates,
+      role,
+      rules
     };
   },
 
