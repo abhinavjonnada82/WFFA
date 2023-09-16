@@ -29,7 +29,7 @@ app.use(router)
 app.use(VueGoogleMaps, {
   load: {
       v: 3.53,
-      key: process.env.GOOGLE_MAPS_KEY,
+      key: 'AIzaSyA_lSDE1PTzh4hMnTpyiOuDXASGQHdsR6U',
       libraries: "places"
   },
 }).mount('#app')
