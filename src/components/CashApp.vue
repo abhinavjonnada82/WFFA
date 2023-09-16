@@ -12,7 +12,7 @@ import { onBeforeMount } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
-import { baseAPI } from '../util.js'
+import { baseAPI } from '../utils.js'
 
 export default {
   name: 'CashApp',
