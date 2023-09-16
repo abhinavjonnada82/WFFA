@@ -32,7 +32,7 @@ import { defineComponent, onBeforeMount } from 'vue';
 import Menu from '../components/Menu.vue';
 import Question from '../components/Question.vue';
 import { ref } from 'vue';
-import { getUserInfo, humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays } from '../utils.js';
+import { getUserInfo, humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays, baseAPI } from '../utils.js';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
@@ -193,7 +193,7 @@ export default defineComponent({
       rulesResponse.value['PIN'] = Math.floor(10000 + Math.random() * 90000);
       const rosterPayload = { "rules": rulesResponse.value}
       rosterPayload["userId"] = userId.value
-      const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=rulesEngine`, {
+      const response = await (await fetch(`${baseAPI}teamData?api=rulesEngine`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{

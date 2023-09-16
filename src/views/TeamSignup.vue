@@ -100,6 +100,7 @@ import 'firebase/auth';
 import { message } from 'ant-design-vue';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
 import Menu from '../components/Menu.vue';
+import { baseAPI } from '../utils';
 
 export default {
   props: {
@@ -205,7 +206,7 @@ export default {
       const rosterPayload = {
           "data": toRaw(formState)
         }
-        const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=addData`, {
+        const response = await (await fetch(`${baseAPI}teamData?api=addData`, {
           method:'POST',
           body: JSON.stringify(rosterPayload),
           headers:{
@@ -252,7 +253,7 @@ export default {
     };
 
     const getUserInfo = async (token) => {
-      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getUserData&type=user`, {
+      const response = await fetch(`${baseAPI}teamData?api=getUserData&type=user`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,

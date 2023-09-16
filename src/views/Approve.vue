@@ -16,6 +16,7 @@ import { message } from 'ant-design-vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
+import { baseAPI } from '../utils';
 
 export default defineComponent({
   components: {
@@ -102,7 +103,7 @@ export default defineComponent({
     }
 
     const getAllTeamInfo = async (token) => {
-      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getData&type=allTeams`, {
+      const response = await fetch(`${baseAPI}teamData?api=getData&type=allTeams`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
@@ -122,7 +123,7 @@ export default defineComponent({
       }
 
     const getTeamApproval = async (token, rosterPayload) => {
-        const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=approveTeam`, {
+        const response = await fetch(`${baseAPI}teamData?api=approveTeam`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{

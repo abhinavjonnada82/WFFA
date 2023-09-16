@@ -21,7 +21,7 @@
   import { message } from 'ant-design-vue';
   import firebase from "firebase/app"
   import 'firebase/auth';
-  import { humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays } from '../utils.js';
+  import { humanReadableFromISO, formatGameTime, formatPayment, formatTournamentDays, baseAPI } from '../utils.js';
 
   export default {
     name: 'Admin Summary',
@@ -103,7 +103,7 @@
         }
 
         const getAdminRules = async (token) => {
-            const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getRules&type=admin`, {
+            const response = await (await fetch(`${baseAPI}teamData?api=getRules&type=admin`, {
                 method:'GET',
                 headers:{
                     Authorization:"Bearer "+token,

@@ -133,6 +133,7 @@ import { message } from 'ant-design-vue';
 import { SmileOutlined, ClockCircleOutlined, FormOutlined, DollarCircleOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
 import UserHeadlines from '../components/UserHeadlines.vue';
+import { baseAPI } from '../utils';
 
 export default {
   setup() {
@@ -159,7 +160,7 @@ export default {
     })
 
     const getUserInfo = async (token) => {
-      const response = await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=getUserData&type=user`, {
+      const response = await fetch(`${baseAPI}teamData?api=getUserData&type=user`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
@@ -208,7 +209,7 @@ export default {
       const rosterPayload = {
           "pin": toRaw(uniquePIN.value)
       }
-      const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=updateUserProfile&type=addRulesEngine`, {
+      const response = await (await fetch(`${baseAPI}teamData?api=updateUserProfile&type=addRulesEngine`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{
@@ -244,7 +245,7 @@ export default {
       const rosterPayload = {
           "data": toRaw(nameField.value)
       }
-      const response = await (await fetch(`https://us-central1-wffa25444.cloudfunctions.net/teamData?api=updateUserProfile&type=addName`, {
+      const response = await (await fetch(`${baseAPI}teamData?api=updateUserProfile&type=addName`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{
