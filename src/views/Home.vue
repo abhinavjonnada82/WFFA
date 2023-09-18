@@ -98,13 +98,18 @@
     <!-- Modals -->
     <a-modal
       v-model:visible="visible"
-      title="Name, please?"
+      title="Details, please?"
       width="75%"
       wrap-class-name="full-modal"
       @ok="handleSubmission"
     >
-      <div v-html="modalText"></div>
+    <template v-if="modalText || modalText2">
+      <div v-if="modalText" v-html="modalText"></div>
       <a-input v-model:value="nameField" />
+      <br />
+      <div v-if="modalText2" v-html="modalText2"></div>
+      <a-input v-model:value="phoneField" required/>
+    </template>
     </a-modal>
 
     <a-modal
@@ -118,8 +123,8 @@
       <a-input type="number" v-model:value="uniquePIN" />
     </a-modal>
   </div>
-</template>
 
+</template>
 
 <script>
 import { ref, onBeforeMount, toRaw } from 'vue';
@@ -141,9 +146,11 @@ export default {
       const adminApproval = ref(``);
       const paymentSuccess = ref(``);
       const modalText = ref('default');
+      const modalText2 = ref('default');
       const visible = ref(false);
       const visiblePin = ref(false);
       const nameField = ref('');
+      const phoneField = ref('');
       const loading = ref(true);
       const auth = firebase.auth();
       const router = useRouter();
@@ -194,8 +201,13 @@ export default {
             role.value = res.data[0]?.role
             localStorage.setItem('payment', res.data[0]?.rules?.payment)
             if (res.data[0]?.name === null) {
-              setUserName();
-            } else {
+              setNamePhoneHtml();
+            } 
+            else if (res.data[0]?.name !== null && res.data[0]?.phone === null) {
+              nameField.value = res.data[0]?.name
+              setNamePhoneHtml();
+            }
+            else if (res.data[0]?.name !== null || res.data[0]?.phone !== null) {
               nameField.value = res.data[0]?.name
               loading.value = false
             }
@@ -242,10 +254,23 @@ export default {
     const handleSubmission = async () => {
       const user = auth.currentUser;
       const idToken = await user.getIdToken();
-      const rosterPayload = {
-          "data": toRaw(nameField.value)
+      const rosterPayload = {}
+      if(nameField.value === '') {
+        message.error({
+                content: `Missing name`,
+                duration: 2,
+            }); 
       }
-      const response = await (await fetch(`${baseAPI}teamData?api=updateUserProfile&type=addName`, {
+      if(phoneField.value === '' || phoneField.value.length < 10 || phoneField.value.length > 12) {
+        message.error({
+                content: `Missing or invalid phone number`,
+                duration: 2,
+            });
+      }
+      else {
+        rosterPayload["name"] = toRaw(processName(nameField.value))
+        rosterPayload["phone"] = toRaw(phoneField.value)
+        const response = await (await fetch(`${baseAPI}teamData?api=updateUserProfile&type=addName`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{
@@ -256,23 +281,27 @@ export default {
         if (response.status === 200) {
             message.success({
               content: 'Thank you!',
-              duration: 2,
+              duration: 4,
             }); 
           }
         else { 
               message.error({
                 content: `ERROR`,
-                duration: 2,
+                duration: 4,
             }); 
          }
         visible.value = false;
       }
+    }
     
 
-    const setUserName = () => {
+    const setNamePhoneHtml = () => {
       loading.value = false
       visible.value = true;
       modalText.value = `<div style="align: center"><h3>Enter your first name + last name:</h3> <br />`
+      modalText2.value = `<br /><div style="align: center"><h3>Enter your phone number (without dashes & parenthesis):</h3>
+        Note: <i> Upon clicking OK, you consent to receive text messages from the WFFA team.</i>
+        <br />`
     }
 
     const redirectToOnboarding = () => {
@@ -287,6 +316,16 @@ export default {
       modalPINText.value = `<div style="align: center"><h3>Enter your unique 5-digit PIN:</h3> <br />`
     }
 
+    const processName = (name) => {
+      const splitName = name.split(' ');
+      let capitalizedName = ``
+      splitName.forEach( i => {
+        capitalizedName += i.charAt(0).toUpperCase() + i.slice(1) + ' '
+      })
+      return capitalizedName.trim()
+
+    }
+
     return {
       completeRoster,
       adminApproval,
@@ -294,7 +333,9 @@ export default {
       visible,
       handleSubmission,
       modalText,
+      modalText2,
       nameField,
+      phoneField,
       loading,
       redirectToOnboarding,
       roleAdmin,
@@ -306,7 +347,8 @@ export default {
       modalPINText,
       visiblePin,
       paymentValue,
-      userType
+      userType,
+      setNamePhoneHtml
     };
   },
 

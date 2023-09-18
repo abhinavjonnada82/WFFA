@@ -91,8 +91,8 @@ export default {
             });
             if (response.ok) {
               message.success({
-              content: 'Payment Success!',
-              duration: 2,
+                content: 'Payment Success! Your receipt will be available to you shortly via text.',
+                duration: 10,
             });
               return response.json();
             }

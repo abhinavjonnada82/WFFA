@@ -17,7 +17,7 @@
 <div v-else-if="new Date(String(registrationLastDates)) < new Date()">
   <h1><b>Registration closed</b></h1>
 </div>
-<div v-else>
+<div v-else-if="teamSignup === false || role === 'player'">
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"
             :wrapper-col="wrapperCol">
 
@@ -239,7 +239,7 @@ export default {
     };
 
     const addDomain = () => {
-      if (formState.players.length+1 <= rosterLimit.value) {
+      if (formState.players.length + 2 <= rosterLimit.value) {
         formState.players.push({
           value: '',
           key: Date.now(),

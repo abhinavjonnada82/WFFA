@@ -10,11 +10,7 @@ import { urls } from './utils.js'
 
 
 window.onload = async () => {
-  console.log('location.host', location.host)
-  console.log('urls.prod.host', urls)
-  console.log('prod.host', urls.prod)
   if(location.host === urls.prod) {
-    console.log('1234')
     const firebaseConfig = {
       apiKey: process.env.VUE_APP_PROD_API_KEY,
       authDomain: process.env.VUE_APP_PROD_AUTH_DOMAIN,
@@ -43,8 +39,6 @@ window.onload = async () => {
 
 const initializeWffaApp = (firebaseConfig) => {
   // Initialize Firebase
-  console.log('fir', firebaseConfig)
-  console.log('app', App)
   firebase.initializeApp(firebaseConfig);
   const app = createApp(App)
   app.use(Antd)
@@ -52,7 +46,7 @@ const initializeWffaApp = (firebaseConfig) => {
   app.use(VueGoogleMaps, {
     load: {
         v: 3.53,
-        key: 'AIzaSyA_lSDE1PTzh4hMnTpyiOuDXASGQHdsR6U',
+        key: process.env.VUE_APP_GOOGLE_MAPS,
         libraries: "places"
     },
   }).mount('#app')
