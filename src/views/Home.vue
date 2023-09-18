@@ -201,11 +201,11 @@ export default {
             role.value = res.data[0]?.role
             localStorage.setItem('payment', res.data[0]?.rules?.payment)
             if (res.data[0]?.name === null) {
-              setNamePhone();
+              setNamePhoneHtml();
             } 
             else if (res.data[0]?.name !== null && res.data[0]?.phone === null) {
               nameField.value = res.data[0]?.name
-              setPhone();
+              setNamePhoneHtml();
             }
             else if (res.data[0]?.name !== null || res.data[0]?.phone !== null) {
               nameField.value = res.data[0]?.name
@@ -295,18 +295,11 @@ export default {
     }
     
 
-    const setNamePhone = () => {
+    const setNamePhoneHtml = () => {
       loading.value = false
       visible.value = true;
       modalText.value = `<div style="align: center"><h3>Enter your first name + last name:</h3> <br />`
-      modalText2.value = `<br /><div style="align: center"><h3>Enter your phone number (without dashes & parenthesis):</h3> <br />`
-    }
-
-    const setPhone = () => {
-      loading.value = false
-      visible.value = true;
-      modalText.value = `<div style="align: center"><h3>Enter your first name + last name:</h3> <br />`
-      modalText2.value = `<br /><div style="align: center"><h3>Enter your phone number (without dashes & parenthesis):</h3> 
+      modalText2.value = `<br /><div style="align: center"><h3>Enter your phone number (without dashes & parenthesis):</h3>
         Note: <i> Upon clicking OK, you consent to receive text messages from the WFFA team.</i>
         <br />`
     }
@@ -355,7 +348,7 @@ export default {
       visiblePin,
       paymentValue,
       userType,
-      setPhone
+      setNamePhoneHtml
     };
   },
 
