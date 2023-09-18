@@ -239,7 +239,9 @@ export default {
     };
 
     const addDomain = () => {
-      if (formState.players.length <= rosterLimit.value) {
+      console.log('23',formState.players.length )
+      console.log('23ccccc',rosterLimit.value )
+      if (formState.players.length + 2 <= rosterLimit.value) {
         formState.players.push({
           value: '',
           key: Date.now(),
