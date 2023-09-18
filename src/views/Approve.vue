@@ -182,3 +182,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+img {
+  width: 250px;
+  height: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>

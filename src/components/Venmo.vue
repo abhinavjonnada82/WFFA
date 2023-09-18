@@ -71,17 +71,18 @@ export default {
                                 orderID: data.orderID,
                                 }),
                             })
-                                .then((response) => response.json())
+                            .then((response) => response.json())
                                 .then((orderData) => {
                                 const transaction =
                                     orderData.purchase_units[0].payments.captures[0];
                                     message.success({
-                                        content: 'Payment Success!',
-                                        duration: 2,
+                                        content: 'Payment Success! Your receipt will be available to you shortly via text.',
+                                        duration: 10,
                                     });
                                 alert(
-                                    `Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`
+                                    `Transaction ${transaction.status}: ${transaction.id}\n\n`
                                 );
+                                //location.reload();
                                 });
                             },
                     }).render("#paypal-button-container");

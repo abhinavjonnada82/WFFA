@@ -10,7 +10,7 @@
     >
     <div style="margin-left: auto; margin-right: auto;">
       <a-form-item style="width: 500px;">
-        <a-input  v-model:value="formState.email" placeholder="Input Email Address">
+        <a-input  v-model:value="formState.email" placeholder="Email Address">
           <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
         </a-input>
       </a-form-item>

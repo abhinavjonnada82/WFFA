@@ -192,6 +192,8 @@ export default defineComponent({
       rulesResponse.value['userId'] = userId.value;
       rulesResponse.value['PIN'] = Math.floor(10000 + Math.random() * 90000);
       const rosterPayload = { "rules": rulesResponse.value}
+      rosterPayload["elminationFormat"] = "Single Elmination"
+      rosterPayload["tournamentFormat"] = "5 Man No Contact"
       rosterPayload["userId"] = userId.value
       const response = await (await fetch(`${baseAPI}teamData?api=rulesEngine`, {
         method:'POST',
