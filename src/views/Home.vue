@@ -200,18 +200,14 @@ export default {
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
             localStorage.setItem('payment', res.data[0]?.rules?.payment)
-            console.log('21ssssssccccxxx3232', res.data[0]?.name)
             if (res.data[0]?.name === null) {
-              console.log('213232')
               setNamePhone();
             } 
             else if (res.data[0]?.name !== null && res.data[0]?.phone === null) {
-              console.log('21ccccsssssd32')
               nameField.value = res.data[0]?.name
               setPhone();
             }
             else if (res.data[0]?.name !== null || res.data[0]?.phone !== null) {
-              console.log('21ccccc32')
               nameField.value = res.data[0]?.name
               loading.value = false
             }
@@ -274,10 +270,7 @@ export default {
       else {
         rosterPayload["name"] = toRaw(processName(nameField.value))
         rosterPayload["phone"] = toRaw(phoneField.value)
-  
-        console.log('rosterPayload', rosterPayload)
-        console.log('idToken', idToken)
-      const response = await (await fetch(`http://127.0.0.1:5001/wffa25444/us-central1/teamData?api=updateUserProfile&type=addName`, {
+        const response = await (await fetch(`${baseAPI}teamData?api=updateUserProfile&type=addName`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{
@@ -288,13 +281,13 @@ export default {
         if (response.status === 200) {
             message.success({
               content: 'Thank you!',
-              duration: 2,
+              duration: 4,
             }); 
           }
         else { 
               message.error({
                 content: `ERROR`,
-                duration: 2,
+                duration: 4,
             }); 
          }
         visible.value = false;

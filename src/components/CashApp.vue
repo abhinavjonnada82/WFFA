@@ -12,7 +12,7 @@ import { onBeforeMount } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
-// import { baseAPI } from '../utils.js'
+import { baseAPI } from '../utils.js'
 
 export default {
   name: 'CashApp',
@@ -81,7 +81,7 @@ export default {
         sourceId: paymentToken,
         payment: localStorage.getItem('payment')
       });
-        const response =  await fetch(`http://127.0.0.1:5001/wffa25444/us-central1/paymentPivot/cashapp-payment`, {
+        const response =  await fetch(`${baseAPI}paymentPivot/cashapp-payment`, {
             method: 'POST',
             headers: {
                 Authorization:"Bearer "+idToken,
