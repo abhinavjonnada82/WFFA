@@ -8,19 +8,32 @@
 
 
 <script>
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, inject } from 'vue';
 import { loadScript } from '@paypal/paypal-js';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
-import { baseAPI } from '../utils';
+import { baseAPI, roundInitalPayment } from '../utils';
+import { store } from '../store';
+import { useRouter } from 'vue-router'
 
 export default {
     name: 'Venmo',
     setup() {
         let paypal = ``
         const auth = firebase.auth();
-        const payment = localStorage.getItem('payment')
+        let payment = ``
+        const paymentMethod = store.paymentMethod
+        const swal = inject('$swal');
+        const router = useRouter();
+
+        if (paymentMethod === `initalDeposit`) { 
+            payment = roundInitalPayment(store.leaguePayment)
+        }
+        else {
+            payment = store.leaguePayment
+        }
+        
         onBeforeMount(async () => {
             paypal = await loadUpVenmo();
             if (!paypal) {
@@ -68,23 +81,33 @@ export default {
                                     "Content-Type": "application/json",
                                 },
                                 body: JSON.stringify({
-                                orderID: data.orderID,
+                                    orderID: data.orderID,
+                                    paymentMethod,
+                                    payment
                                 }),
                             })
                             .then((response) => response.json())
                                 .then((orderData) => {
-                                const transaction =
                                     orderData.purchase_units[0].payments.captures[0];
                                     message.success({
                                         content: 'Payment Success! Your receipt will be available to you shortly via text.',
                                         duration: 10,
                                     });
-                                alert(
-                                    `Transaction ${transaction.status}: ${transaction.id}\n\n`
-                                );
-                                //location.reload();
-                                });
-                            },
+                                    swal.fire({
+                                        title: '<strong>Payment Success</strong>',
+                                        icon: 'success',
+                                        html: `Payment Successful! Your receipt will be available to you shortly via text.`,
+                                        showCloseButton: false,
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Back to Home',
+                                        confirmButtonClass: 'custom-button-class',
+                                        allowOutsideClick: false,
+                                    }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                router.push({path: '/'})
+                                        } })
+                                                });
+                                            },
                     }).render("#paypal-button-container");
                 } 
                 catch (error) {
@@ -95,7 +118,8 @@ export default {
                 console.log('Error!')
             }
         }
-        return {};
+        return {
+        };
     },
     };
 </script>

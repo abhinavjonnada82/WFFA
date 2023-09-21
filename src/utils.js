@@ -50,3 +50,5 @@ let api = ``;
 if(location.host === urls.prod) api = 'https://us-central1-wffa-live.cloudfunctions.net/';
 else api = 'https://us-central1-wffa25444.cloudfunctions.net/';
 export const baseAPI = api;
+
+export const roundInitalPayment = (payment) => { return Math.round(parseInt(payment) * 0.333) }

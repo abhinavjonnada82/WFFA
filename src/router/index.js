@@ -53,6 +53,11 @@ const routes = [
     component: () => import('../views/Onboarding.vue')
   },
   {
+    path: '/payment',
+    name: 'Payment',
+    component: () => import('../views/Payment.vue')
+  },
+  {
     path: '/:catchAll(.*)*',
     name: "PageNotFound",
     component: PageNotFound,
