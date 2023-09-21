@@ -14,7 +14,7 @@ import { onBeforeMount, inject } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
-import { roundInitalPayment } from '../utils.js';
+import { baseAPI, roundInitalPayment } from '../utils.js';
 import { store } from '../store';
 import { useRouter } from 'vue-router'
 

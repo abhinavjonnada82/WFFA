@@ -13,7 +13,7 @@ import { loadScript } from '@paypal/paypal-js';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
-import { roundInitalPayment } from '../utils';
+import { baseAPI, roundInitalPayment } from '../utils';
 import { store } from '../store';
 import { useRouter } from 'vue-router'
 
