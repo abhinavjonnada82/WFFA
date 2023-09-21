@@ -8,7 +8,6 @@
       </div>
       <h1><b>Welcome, {{ nameField || `guest` }}!</b></h1>
       <a-spin v-if="loading" size="large"></a-spin>
-
       <!-- Timeline Div -->
       <div v-if="userType === `user`">
         <a-timeline mode="alternate">
@@ -33,11 +32,17 @@
                         </div>
 
                         <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-                          <a-timeline-item color="#00CCFF">
+                          <a-timeline-item color="#00CCFF"><router-link to="/payment">
                             <template #dot>
                               <DollarCircleOutlined style="font-size: 16px" />
                             </template>
-                            <p>Make a payment $$$</p>
+                              <div v-if="initalPaymentSuccess === true">
+                              <p> Make remaining payment $$$</p>
+                              </div>
+                              <div v-else>
+                                <p> Make a payment $$$ </p>
+                              </div>
+                          </router-link>
                           </a-timeline-item>
                         </div>
                         <div v-else-if="completeRoster === true && adminApproval === true && paymentSuccess === true">
@@ -66,14 +71,7 @@
                         </div>
         </a-timeline>
       </div>
-
       <br />
-
-            <!-- Payment Div -->
-      <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">
-        <CashApp />
-        <Venmo />
-      </div>
 
       <div class="button-container">
         <!-- ... Button Divs ... -->
@@ -131,20 +129,21 @@ import { ref, onBeforeMount, toRaw } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import Menu from '../components/Menu.vue';
-import CashApp from '../components/CashApp.vue';
-import Venmo from '../components/Venmo.vue';
 import AdminSummary from '../components/AdminSummary.vue';
 import { message } from 'ant-design-vue';
 import { SmileOutlined, ClockCircleOutlined, FormOutlined, DollarCircleOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router'
 import UserHeadlines from '../components/UserHeadlines.vue';
 import { baseAPI } from '../utils';
+import { store } from '../store.js';
+
 
 export default {
   setup() {
       const completeRoster = ref(``);
       const adminApproval = ref(``);
       const paymentSuccess = ref(``);
+      const initalPaymentSuccess = ref(``);
       const modalText = ref('default');
       const modalText2 = ref('default');
       const visible = ref(false);
@@ -163,7 +162,7 @@ export default {
       const paymentValue = ref('');
 
     onBeforeMount(() => {
-      getIdToken()
+      getIdToken();
     })
 
     const getUserInfo = async (token) => {
@@ -195,11 +194,15 @@ export default {
             completeRoster.value = res.data[0]?.teamSignup
             adminApproval.value = res.data[0]?.approve
             paymentSuccess.value = res.data[0]?.payment
+            initalPaymentSuccess.value = res.data[0]?.initalPaymentDepositFlag
             roleAdmin.value = res.data[0]?.admin
             userType.value = res.data[0]?.role
             rulesEngineActive.value = res.data[0]?.rulesEngineActive
             role.value = res.data[0]?.role
-            localStorage.setItem('payment', res.data[0]?.rules?.payment)
+            store.leaguePayment = parseInt(res.data[0]?.rules?.payment)
+            store.initalPaymentSuccessFlag = res.data[0]?.initalPaymentDepositFlag || false
+            store.remainingPaymentBalance = res.data[0]?.initalDepositPayment
+            localStorage.setItem('leaguePayment', res.data[0]?.rules?.payment)
             if (res.data[0]?.name === null) {
               setNamePhoneHtml();
             } 
@@ -323,7 +326,6 @@ export default {
         capitalizedName += i.charAt(0).toUpperCase() + i.slice(1) + ' '
       })
       return capitalizedName.trim()
-
     }
 
     return {
@@ -348,20 +350,19 @@ export default {
       visiblePin,
       paymentValue,
       userType,
-      setNamePhoneHtml
+      setNamePhoneHtml,
+      initalPaymentSuccess
     };
   },
 
   components: {
     Menu,
-    CashApp,
-    Venmo,
     SmileOutlined,
     ClockCircleOutlined,
     FormOutlined,
     DollarCircleOutlined,
     AdminSummary,
-    UserHeadlines
+    UserHeadlines,
 },
 };
 </script>
@@ -391,7 +392,6 @@ img {
   align-items: center;
 }
 
-/* Add more styles as needed */
 </style>
 
 
