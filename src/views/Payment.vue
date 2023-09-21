@@ -13,17 +13,21 @@ const depositPayment = BigInt(Math.round(req.body.payment));
                 <br />
                 <br />
                 <a-button type="primary" :disabled="disabled" @click="loadUpPayment">Submit</a-button>
+                <br />
+            <br />
             </div>
             <div v-else>
                 <h2>Pay remaining amount ${{ remainingPaymentBalance }}?</h2>
             </div>
+            <br />
+            <br />
             <div v-if="enablePayment === true">
                     <CashApp />
                     <Venmo />
-                </div>
-                <br />
-                <br />
-                <a-button type="dashed" @click="backToHome">Back to Home 🏠</a-button>
+            </div>
+            <br />
+            <br />
+            <a-button type="dashed" @click="backToHome">Back to Home 🏠</a-button>
             </div>
 
     </template>
