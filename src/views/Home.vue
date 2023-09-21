@@ -28,7 +28,12 @@
                           <a-timeline-item color="green">Payment</a-timeline-item>
                         </div>
                         <div v-else>
-                          <a-timeline-item color="red">Payment</a-timeline-item>
+                          <div v-if="initalPaymentSuccess === true">
+                              <a-timeline-item color="green">Inital Payment Successful</a-timeline-item>
+                              </div>
+                              <div v-else>
+                                <a-timeline-item color="red">Payment</a-timeline-item>
+                            </div>
                         </div>
 
                         <div v-if="completeRoster === true && adminApproval === true && paymentSuccess === false">

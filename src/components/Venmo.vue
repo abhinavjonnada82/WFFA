@@ -89,24 +89,31 @@ export default {
                             .then((response) => response.json())
                                 .then((orderData) => {
                                     orderData.purchase_units[0].payments.captures[0];
-                                    message.success({
-                                        content: 'Payment Success! Your receipt will be available to you shortly via text.',
-                                        duration: 10,
-                                    });
                                     swal.fire({
                                         title: '<strong>Payment Success</strong>',
                                         icon: 'success',
                                         html: `Payment Successful! Your receipt will be available to you shortly via text.`,
+                                        footer: `Note: <b><i>Please wait for 5-10 seconds or reload your page to see your updated payment timeline.</b></i>`,
                                         showCloseButton: false,
                                         showCancelButton: false,
-                                        confirmButtonText: 'Back to Home',
+                                        confirmButtonText: 'Back to Home 🏠',
                                         confirmButtonClass: 'custom-button-class',
                                         allowOutsideClick: false,
                                     }).then((result) => {
                                             if (result.isConfirmed) {
                                                 router.push({path: '/'})
-                                        } })
-                                                });
+                                                swal.fire(
+                                                    '',
+                                                    'Refresh your browser if your payment timeline does not update within the next 5-10 seconds.',
+                                                    'info'
+                                                )
+                                                setTimeout(() => {
+                                                    window.location.reload();
+                                                }, 8000);
+                                            
+                                            } 
+                                            })
+                                        });
                                             },
                     }).render("#paypal-button-container");
                 } 
@@ -115,6 +122,10 @@ export default {
                 }
             } 
             else {
+                message.error({
+                  content: 'Error!',
+                  duration: 5,
+              });
                 console.log('Error!')
             }
         }

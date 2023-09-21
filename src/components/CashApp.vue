@@ -105,28 +105,40 @@ export default {
             body,
             });
             if (response.ok) {
-              message.success({
-                content: 'Payment Success! Your receipt will be available to you shortly via text.',
-                duration: 10,
-            });
             swal.fire({
                         title: '<strong>Payment Success</strong>',
                         icon: 'success',
                         html: `Payment Successful! Your receipt will be available to you shortly via text.`,
+                        footer: `Note: <b><i>Please wait for 5-10 seconds or reload your page to see your updated payment timeline.</b></i>`,
                         showCloseButton: false,
                         showCancelButton: false,
-                        confirmButtonText: 'Back to Home',
+                        confirmButtonText: 'Back to Home 🏠',
                         confirmButtonClass: 'custom-button-class',
                         allowOutsideClick: false,
                     }).then((result) => {
                             if (result.isConfirmed) {
                                 router.push({path: '/'})
+                                swal.fire(
+                                  '',
+                                  'Refresh your browser if your payment timeline does not update within the next 5-10 seconds.',
+                                  'info'
+                                  )
+                                setTimeout(() => {
+                                  window.location.reload();
+                                }, 8000);
                         } })
 
               return response.json();
             }
-            const errorBody = await response.text();
-            throw new Error(errorBody);
+            else {
+              message.error({
+                  content: await response.text(),
+                  duration: 5,
+              });
+              const errorBody = await response.text();
+              throw new Error(errorBody);
+            }
+            
     }
 
     const triggerCashAppProcess = async () => {
