@@ -7,6 +7,8 @@ import 'ant-design-vue/dist/antd.css';
 import "firebase/firestore";
 import VueGoogleMaps from '@fawmi/vue-google-maps';
 import { urls } from './utils.js'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 window.onload = async () => {
@@ -43,6 +45,7 @@ const initializeWffaApp = (firebaseConfig) => {
   const app = createApp(App)
   app.use(Antd)
   app.use(router)
+  app.use(VueSweetalert2)
   app.use(VueGoogleMaps, {
     load: {
         v: 3.53,
