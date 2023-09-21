@@ -96,7 +96,7 @@ export default {
         payment: payment,
         paymentMethod
       });
-        const response =  await fetch(`http://127.0.0.1:5001/wffa25444/us-central1/paymentPivot/cashapp-payment`, {
+        const response =  await fetch(`${baseAPI}paymentPivot/cashapp-payment`, {
             method: 'POST',
             headers: {
                 Authorization:"Bearer "+idToken,

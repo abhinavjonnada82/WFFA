@@ -60,7 +60,7 @@ export default {
                 try {
                     await paypal.Buttons({
                         createOrder: () => {
-                            return fetch(`http://127.0.0.1:5001/wffa25444/us-central1/paymentPivot/create-paypal-order`, {
+                            return fetch(`${baseAPI}paymentPivot/create-paypal-order`, {
                                 method: "POST",
                                 headers: {
                                     Authorization:"Bearer "+idToken,
@@ -74,7 +74,7 @@ export default {
                                 .then((order) => order.id);
                         },
                         onApprove: (data) => {
-                            return fetch(`http://127.0.0.1:5001/wffa25444/us-central1/paymentPivot/capture-paypal-order`, {
+                            return fetch(`${baseAPI}paymentPivot/capture-paypal-order`, {
                                 method: "POST",
                                 headers: {
                                     Authorization:"Bearer "+idToken,
