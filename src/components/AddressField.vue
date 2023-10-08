@@ -10,7 +10,8 @@
               > 
               </GMapAutocomplete>
     <br />
-    <h3>Address: {{ address }}</h3>
+    <br />
+    <h3><b>Address:</b> {{ address }}</h3>
   </div>
 </template>
 

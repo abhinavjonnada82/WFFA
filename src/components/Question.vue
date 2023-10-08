@@ -82,6 +82,7 @@
           <VueDatePicker v-model="registrationDates" range multi-calendars @change="logSelectedDateRange" :alt-position="customPosition"/>
       </a-space>
       <br />
+      <br />
             <h3><b>Registration Dates:</b> {{ registrationDates[0] }} - {{ registrationDates[1] }}</h3>
       <br />
       <a-space>
@@ -241,7 +242,6 @@ export default {
       addressResponse.value = response;
     };
 
-
     return {
       question,
       options,
@@ -266,7 +266,6 @@ export default {
       handleAddressResponse,
       addressResponse,
       customPosition
-
     };
   },
 };
