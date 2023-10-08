@@ -176,6 +176,7 @@ export default {
 
     onBeforeMount(() => {
       getIdToken();
+      activityCheckController();
     })
 
     const getUserInfo = async (token) => {
@@ -216,9 +217,8 @@ export default {
             store.initalPaymentSuccessFlag = res.data[0]?.initalPaymentDepositFlag || false
             store.remainingPaymentBalance = res.data[0]?.initalDepositPayment
             localStorage.setItem('leaguePayment', res.data[0]?.rules?.payment)
-            if (res.data[0]?.name === null) {
-              setNamePhoneHtml();
-            } 
+            localStorage.setItem('PIN', res.data[0]?.rules?.PIN || res.data[0]?.PIN )
+            if (res.data[0]?.name === null) { setNamePhoneHtml(); } 
             else if (res.data[0]?.name !== null && res.data[0]?.phone === null) {
               nameField.value = res.data[0]?.name
               setNamePhoneHtml();
@@ -341,6 +341,29 @@ export default {
       return capitalizedName.trim()
     }
 
+    const activityCheckController = () => {
+      setTimeout(() => {
+            setTimeout(() => {
+                  // Log out user if they don't respond to warning after 5 seconds.
+                  clearLocalStorage();
+              }, 5000)
+              // Show warning after 20 minutes of no activity.
+              message.warning({
+                content: `You have been inactive for 20 minutes. You will be logged out in 5 seconds.`,
+                duration: 5,
+            });
+        }, 1200000);
+    };
+
+    const clearLocalStorage = () => {
+      firebase.auth().signOut();
+      delete localStorage.admin;
+      delete localStorage.leaguePayment;
+      delete localStorage.PIN;
+      delete localStorage.records;
+      window.location.hash = '#';
+}
+
     return {
       completeRoster,
       adminApproval,
@@ -364,7 +387,8 @@ export default {
       paymentValue,
       userType,
       setNamePhoneHtml,
-      initalPaymentSuccess
+      initalPaymentSuccess,
+      activityCheckController
     };
   },
 

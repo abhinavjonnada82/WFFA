@@ -94,7 +94,7 @@ export default defineComponent({
       if (user) {
         token = await user.getIdToken();
         const rosterPayload = {'userId': item.id, 'phone': item.phone}
-        response = await getTeamApproval(token, rosterPayload);
+        response = await initTeamApproval(token, rosterPayload);
         if (response.code == 200) onDelete(item.key)
       } else {
         auth.signOut().then(() => console.log('Signed out') )
@@ -103,7 +103,7 @@ export default defineComponent({
     }
 
     const getAllTeamInfo = async (token) => {
-      const response = await fetch(`${baseAPI}teamData?api=getData&type=allTeams`, {
+      const response = await fetch(`${baseAPI}teamData?api=getData&type=allTeams&PIN=${localStorage.getItem('PIN')}`, {
         method:'GET',
         headers:{
             Authorization:"Bearer "+token,
@@ -122,7 +122,7 @@ export default defineComponent({
           }
       }
 
-    const getTeamApproval = async (token, rosterPayload) => {
+    const initTeamApproval = async (token, rosterPayload) => {
         const response = await fetch(`${baseAPI}teamData?api=approveTeam`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
@@ -151,7 +151,7 @@ export default defineComponent({
     const appendDataTable = (records) => {
       records.forEach((record, i) => {
            record.data && data.push({
-            key: i,
+            key: i+1,
             tname: record.data.teamName,
             captainName: record.data.capFullName,
             numPlayers: record.data.players.length,

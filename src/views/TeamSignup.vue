@@ -204,7 +204,8 @@ export default {
       const user = auth.currentUser;
       const idToken = await user.getIdToken();
       const rosterPayload = {
-          "data": toRaw(formState)
+          "data": toRaw(formState),
+          "PIN": parseInt(localStorage.getItem('PIN'))
         }
         const response = await (await fetch(`${baseAPI}teamData?api=addData`, {
           method:'POST',
