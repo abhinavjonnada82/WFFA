@@ -2,7 +2,9 @@
   <div id="payment-status-container"></div>
   <div>
     <form id="payment-form">
-      <div id="cash-app-pay"></div>
+      <a-spin :spinning="spinning">
+        <div id="cash-app-pay"></div>
+      </a-spin>
     </form>
   </div>
 </template>
@@ -10,7 +12,7 @@
 
 
 <script>
-import { onBeforeMount, inject } from 'vue';
+import { onBeforeMount, inject, ref } from 'vue';
 import firebase from "firebase/app"
 import 'firebase/auth';
 import { message } from 'ant-design-vue';
@@ -28,14 +30,16 @@ export default {
     const auth = firebase.auth();
     const swal = inject('$swal');
     const router = useRouter();
+    const spinning = ref(false);
 
     onBeforeMount(async () => {
-        const response = await loadUpSquare();
-        if(!response) {
-            alert('Failed to load square script')
-            return
-        }
-       triggerCashAppProcess()
+      spinning.value = true;
+      const response = await loadUpSquare();
+      if(!response) {
+          alert('Failed to load square script')
+          return
+      }
+      triggerCashAppProcess()
     })
 
     const loadUpSquare = async () => {
@@ -63,6 +67,7 @@ export default {
           width: 'full',
         };
         await cashAppPay.attach('#cash-app-pay', buttonOptions);
+        spinning.value = false;
         return cashAppPay;
     }
 
@@ -159,6 +164,13 @@ export default {
           cashAppPay = await initializeCashApp(payments);
         } catch (e) {
           console.error('Initializing Cash App Pay failed', e);
+          const error_msg = e.message
+          if(error_msg.match('already rendered')){
+            message.error({
+                content: 'Reload your browser page to re-enable Cash App.',
+                duration: 15,
+            });
+          }
         }
         if (cashAppPay) {
           cashAppPay.addEventListener('ontokenization',
@@ -180,8 +192,10 @@ export default {
         }
     }
 
-
+    return {
+          spinning
   }
+}
 }
 </script>
 

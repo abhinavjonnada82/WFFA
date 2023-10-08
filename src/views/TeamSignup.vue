@@ -6,16 +6,16 @@
              <a-spin v-if="loading" size="large"></a-spin>
 
 <div v-if="teamSignup === true || role === 'admin'">
-  <h1><b>Signup disabled!</b></h1>
+  <h1><b>Sign up is disabled.</b></h1>
 </div>
 <div v-if="rules === false">
-  <h1><b>Enter a Season/Tournament to signup your team!</b></h1>
+  <h1><b>Enter a season or tournament to signup your team!</b></h1>
 </div>
 <div v-else-if="new Date(String(registrationDates)) > new Date()">
   <h1><b>Registration opens on {{ new Date(String(registrationDates)).toLocaleDateString() }}</b></h1>
 </div>
 <div v-else-if="new Date(String(registrationLastDates)) < new Date()">
-  <h1><b>Registration closed</b></h1>
+  <h1><b>Registration is closed.</b></h1>
 </div>
 <div v-else-if="teamSignup === false || role === 'player'">
   <a-form ref="formRef" :model="formState" v-bind="formItemLayoutWithOutLabel" :label-col="labelCol"

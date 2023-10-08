@@ -90,12 +90,11 @@ const depositPayment = BigInt(Math.round(req.body.payment));
                 store.paymentMethod = 'fullAmount'
                 store.leaguePayment = parseInt(store.leaguePayment) - parseInt(store.remainingPaymentBalance)
             }
-            console.log(initalPaymentSuccessFlag.value, remainingPaymentBalance.value, store.paymentMethod)
         }
 
         const redirectToHome = () => { if (store.leaguePayment == 0)  router.push({ path: '/' }) }
         
-        const backToHome = () => { router.push({path: '/'}) }
+        const backToHome = () => router.push({path: '/'})
 
         return {
           error,

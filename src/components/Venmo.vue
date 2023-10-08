@@ -1,14 +1,16 @@
 <template>
     <div>
       <form id="payment-form">
-        <div id="paypal-button-container"></div>
+        <a-spin :spinning="spinning">
+            <div id="paypal-button-container"></div>
+        </a-spin>
       </form>
     </div>
 </template>
 
 
 <script>
-import { onBeforeMount, inject } from 'vue';
+import { onBeforeMount, inject, ref } from 'vue';
 import { loadScript } from '@paypal/paypal-js';
 import firebase from "firebase/app"
 import 'firebase/auth';
@@ -26,6 +28,7 @@ export default {
         const paymentMethod = store.paymentMethod
         const swal = inject('$swal');
         const router = useRouter();
+        const spinning = ref(false);
 
         if (paymentMethod === `initalDeposit`) { 
             payment = roundInitalPayment(store.leaguePayment)
@@ -35,6 +38,7 @@ export default {
         }
         
         onBeforeMount(async () => {
+            spinning.value = true;
             paypal = await loadUpVenmo();
             if (!paypal) {
                 alert('Failed to load venmo')
@@ -116,9 +120,17 @@ export default {
                                         });
                                             },
                     }).render("#paypal-button-container");
+                    spinning.value = false;
                 } 
                 catch (error) {
                     console.error("failed to render the PayPal Buttons", error);
+                    const error_msg = error.message
+                    if(error_msg.match('already rendered')){
+                        message.error({
+                            content: 'Reload your browser page to re-enable Venmo/PayPal.',
+                            duration: 15,
+                        });
+                    }
                 }
             } 
             else {
@@ -130,6 +142,7 @@ export default {
             }
         }
         return {
+            spinning
         };
     },
     };
