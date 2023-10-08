@@ -33,4 +33,6 @@ See the open issues for a full list of proposed features (and known issues)
 
 Distributed under the MIT License. See LICENSE.txt for more information.
 
+Art by: [Abhinav Jonnada](https://twitter.com/ajon82)
+
 Reach out on [discussions](https://github.com/abhinavjonnada82/wffawebapp/discussions/59) or [twitter](https://twitter.com/ajon82)
