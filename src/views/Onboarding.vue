@@ -194,7 +194,7 @@ export default defineComponent({
       const rosterPayload = { "rules": rulesResponse.value}
       rosterPayload["userId"] = userId.value
 
-      const response = await (await fetch(`${baseAPI}teamData?api=rulesEngine`, {
+      const response = await (await fetch(`${baseAPI}teamData?api=adminRulesEngine`, {
         method:'POST',
         body: JSON.stringify(rosterPayload),
         headers:{

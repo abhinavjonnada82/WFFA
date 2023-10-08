@@ -149,7 +149,7 @@ export default defineComponent({
     }
 
     const appendDataTable = (records) => {
-      records.forEach((record, i) => {
+      records && records.forEach((record, i) => {
            record.data && data.push({
             key: i+1,
             tname: record.data.teamName,

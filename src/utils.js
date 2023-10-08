@@ -33,7 +33,7 @@ export const humanReadableFromISO = (registrationDates) => {
 export const formatTournamentDays = (days) => {
   const uniqueDays = new Set();
   for (const day of days) { uniqueDays.add(day); }
-  return Array.from(uniqueDays);
+  return Array.from(uniqueDays).join(', ');
 };
 
 export const formatGameTime = (time) => { return `${time[0]} - ${time[1]}`}
