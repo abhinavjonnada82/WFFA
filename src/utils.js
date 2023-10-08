@@ -22,12 +22,12 @@ export const getUserInfo = async (token) => {
 
 export const humanReadableFromISO = (registrationDates) => {
       let timeStamp = ``
-        for (const registrationDate of registrationDates ) {
-            const submittedDate = new Date(String(registrationDate));
-            timeStamp += `${submittedDate.toLocaleString('en-US', { month: 'long' }) + ' ' 
-                            + submittedDate.getDate() + ',' + submittedDate.getFullYear() + ' '} - `
-        }
-        return timeStamp.slice(0, -2); // January 28, 2021 16:11:54
+      for (const registrationDate of registrationDates ) {
+          const submittedDate = new Date(String(registrationDate));
+          timeStamp += `${submittedDate.toLocaleString('en-US', { month: 'long' }) + ' ' 
+                          + submittedDate.getDate() + ',' + submittedDate.getFullYear() + ' '} - `
+      }
+      return timeStamp.slice(0, -2); // January 28, 2021 16:11:54
 }
 
 export const formatTournamentDays = (days) => {

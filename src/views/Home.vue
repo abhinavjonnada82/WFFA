@@ -344,10 +344,9 @@ export default {
     const activityCheckController = () => {
       setTimeout(() => {
             setTimeout(() => {
-                  // Log out user if they don't respond to warning after 5 seconds.
                   clearLocalStorage();
               }, 5000)
-              // Show warning after 20 minutes of no activity.
+              // Show warning after 20 minutes of no activity & logout.
               message.warning({
                 content: `You have been inactive for 20 minutes. You will be logged out in 5 seconds.`,
                 duration: 5,
