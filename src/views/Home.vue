@@ -81,18 +81,26 @@
       <div class="button-container">
         <!-- ... Button Divs ... -->
         <div v-if="roleAdmin === true && rulesEngineActive === true">
+          <a-collapse>
+              <a-collapse-panel header="Tournament Summary">
                 <AdminSummary/>
+              </a-collapse-panel>
+            </a-collapse>
                 <br />
-                <a-button type="primary" size="large" disabled>Host a season/tournment</a-button>
+                <a-button type="primary" size="large" disabled>Host a season/tournament</a-button>
               </div>
               <div v-else-if="roleAdmin === true">
-                <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
+                <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournament</a-button>
               </div>
               <div v-else-if="role === 'user' && rulesEngineActive === false && nameField !== ''">
-                <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
+                <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournament</a-button>
               </div>
               <div v-else-if="role === 'user' && rulesEngineActive === true">
-                <UserHeadlines />
+                <a-collapse>
+                  <a-collapse-panel header="Tournament Summary">
+                    <UserHeadlines />
+                  </a-collapse-panel>
+                  </a-collapse>
               </div>
       </div>
 
@@ -117,7 +125,7 @@
 
     <a-modal
       v-model:visible="visiblePin"
-      title="Enter a season/tournment"
+      title="Enter a season/tournament"
       width="75%"
       wrap-class-name="full-modal"
       @ok="handlePINSubmission"
@@ -168,6 +176,7 @@ export default {
 
     onBeforeMount(() => {
       getIdToken();
+      activityCheckController();
     })
 
     const getUserInfo = async (token) => {
@@ -208,9 +217,8 @@ export default {
             store.initalPaymentSuccessFlag = res.data[0]?.initalPaymentDepositFlag || false
             store.remainingPaymentBalance = res.data[0]?.initalDepositPayment
             localStorage.setItem('leaguePayment', res.data[0]?.rules?.payment)
-            if (res.data[0]?.name === null) {
-              setNamePhoneHtml();
-            } 
+            localStorage.setItem('PIN', res.data[0]?.rules?.PIN || res.data[0]?.PIN )
+            if (res.data[0]?.name === null) { setNamePhoneHtml(); } 
             else if (res.data[0]?.name !== null && res.data[0]?.phone === null) {
               nameField.value = res.data[0]?.name
               setNamePhoneHtml();
@@ -333,6 +341,28 @@ export default {
       return capitalizedName.trim()
     }
 
+    const activityCheckController = () => {
+      setTimeout(() => {
+            setTimeout(() => {
+                  clearLocalStorage();
+              }, 5000)
+              // Show warning after 20 minutes of no activity & logout.
+              message.warning({
+                content: `You have been inactive for 20 minutes. You will be logged out in 5 seconds.`,
+                duration: 5,
+            });
+        }, 1200000);
+    };
+
+    const clearLocalStorage = () => {
+      firebase.auth().signOut();
+      delete localStorage.admin;
+      delete localStorage.leaguePayment;
+      delete localStorage.PIN;
+      delete localStorage.records;
+      window.location.hash = '#';
+}
+
     return {
       completeRoster,
       adminApproval,
@@ -356,7 +386,8 @@ export default {
       paymentValue,
       userType,
       setNamePhoneHtml,
-      initalPaymentSuccess
+      initalPaymentSuccess,
+      activityCheckController
     };
   },
 
