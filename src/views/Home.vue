@@ -81,18 +81,26 @@
       <div class="button-container">
         <!-- ... Button Divs ... -->
         <div v-if="roleAdmin === true && rulesEngineActive === true">
+          <a-collapse>
+              <a-collapse-panel header="Tournament Summary">
                 <AdminSummary/>
+              </a-collapse-panel>
+            </a-collapse>
                 <br />
-                <a-button type="primary" size="large" disabled>Host a season/tournment</a-button>
+                <a-button type="primary" size="large" disabled>Host a season/tournament</a-button>
               </div>
               <div v-else-if="roleAdmin === true">
-                <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournment</a-button>
+                <a-button type="primary" size="large" @click="redirectToOnboarding">Host a season/tournament</a-button>
               </div>
               <div v-else-if="role === 'user' && rulesEngineActive === false && nameField !== ''">
-                <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournment</a-button>
+                <a-button type="primary" size="large" @click="integrateRulesEngine">Enter a season/tournament</a-button>
               </div>
               <div v-else-if="role === 'user' && rulesEngineActive === true">
-                <UserHeadlines />
+                <a-collapse>
+                  <a-collapse-panel header="Tournament Summary">
+                    <UserHeadlines />
+                  </a-collapse-panel>
+                  </a-collapse>
               </div>
       </div>
 
@@ -117,7 +125,7 @@
 
     <a-modal
       v-model:visible="visiblePin"
-      title="Enter a season/tournment"
+      title="Enter a season/tournament"
       width="75%"
       wrap-class-name="full-modal"
       @ok="handlePINSubmission"

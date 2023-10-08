@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-card title="Tournment Summary" :style="{ textAlign: 'center' }">
+        <a-card :style="{ textAlign: 'center' }">
             <a-list :grid="{ gutter: 16, column: 4 }" :data-source="data">
                 <template #renderItem="{ item }">
                 <a-list-item>
