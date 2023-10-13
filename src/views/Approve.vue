@@ -94,11 +94,14 @@ export default defineComponent({
       if (user) {
         token = await user.getIdToken();
         const rosterPayload = {'userId': item.id, 'phone': item.phone}
+        loading.value = true
         response = await initTeamApproval(token, rosterPayload);
-        if (response.code == 200) onDelete(item.key)
+        if (response.code == 200) {
+          onDelete(item.key)
+          loading.value = false
+        }
       } else {
-        auth.signOut().then(() => console.log('Signed out') )
-        .catch(err => alert(err.message))
+        console.log('error')
       }}) 
     }
 
